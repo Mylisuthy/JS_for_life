@@ -1,0 +1,75 @@
+<!DOCTYPE html> 
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard de Productividad Personal</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="icon"
+      href="assets/freepik_assistant_1750260929874.png"
+      type="image/x-icon"
+    />
+  </head>
+  <body>
+    <!-- Dark mode toggle button -->
+    <button id="darkModeToggle">🌙</button>
+
+    <!-- Header section with title and greeting -->
+    <header>
+      <h1>Dashboard de Productividad Personal</h1>
+      <!-- Button to display greeting -->
+      <button onclick="saludar()"> Mostrar saludo</button>
+      <p id="saludoResultado">Hola, bienvenid@</p>
+    </header>
+
+    <main>
+      <!-- Card: Add a new task -->
+      <section class="card">
+        <h2>Añadir tarea</h2>
+        <p id="mensajeValidacion"></p>
+        <input
+          type="text"
+          id="inputTarea"
+          placeholder="Escribe tu tarea aquí"
+        />
+        <button id="btnValidar">Añadir</button>
+        <div id="tareaReciente" class="nuevaEntrada"></div>
+      </section>
+
+      <!-- Card: Weekly task list -->
+      <section class="card">
+        <h2>Tareas de la semana</h2>
+        <ul id="listaTareas"></ul>
+        <button id="mostrarTareas">Mostrar tareas</button>
+        <button id="ocultarTareas">Ocultar tareas</button>
+      </section>
+
+      <!-- Card: Task counter -->
+      <section class="card">
+        <h2>Contador de tareas</h2>
+        <p>Tareas completadas: <span id="contador">0</span></p>
+        <button id="restar">Restar</button>
+        <button id="resetear">Resetear</button>
+        <button id="sumar">Sumar</button>
+      </section>
+
+      <!-- Card: Random productivity tip -->
+      <section class="card">
+        <h2>Tip aleatorio</h2>
+        <p id="tip">Presiona el botón para un consejo</p>
+        <button id="btnTip">Mostrar tip</button>
+      </section>
+    </main>
+
+    <!-- Footer section -->
+    <footer>
+      <p>© 2025 Cofradía Korotkevich. Todos los derechos reservados.</p>
+    </footer>
+  </body>
+</html>
+
+<!-- Link to external JavaScript file -->
+<script src="script.js"></script>
+
+
