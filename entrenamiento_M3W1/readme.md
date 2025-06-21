@@ -177,7 +177,5 @@ solicitarDatos();
 este trabajo fue echo con la finalidad de aprender la corecta ejecucion del codigo en ambientes reales, se tuvieron diversos problemas tanto en la implementacion de la correcta entrada de datos asi como la correcta utilisacion de los bucles y funciones.
 la informacion para la correcta implementacion de este codigo se obtubo tanto de sitios oficiales (https://nodejs.org/en/docs o https://developer.mozilla.org/) como de ia (chatGPT) para explicaciones personalizadas que me encaminaran a una solucion correcta y escalable.
 
-**trabajo hecho por:** Juan David Gonzalez Hincapie
-**clan:** lunus
-
-developer de **Riwi**
+* **trabajo hecho por:** Juan David Gonzalez Hincapie **developer de Riwi**
+* **clan:** lunus
