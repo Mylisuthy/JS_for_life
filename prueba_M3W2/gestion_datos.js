@@ -23,7 +23,7 @@ productos.forEach(validarProductos);
 
 // set para las ID de productos
 // evita duplicados
-const setIds = new Set(productos.map(Producto => Producto.id));
+const setIds = new Set(productos.map(Producto => Producto.nombre));
 console.log("Set de productos únicos:", setIds);
 console.log("-".repeat(100));
 
