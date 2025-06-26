@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src=""></script>
+    <link rel="stylesheet" href="style.css">
+    <title>gestion de inventario</title>
+</head>
+<body>
+    <header>
+        <h1>gestion de inventarios</h1>
+    </header>
+    <section>
+      <h2 class="">agregar un producto nuevo</h2>
+        <form class="" method="post" action="/"><br>
+            <fieldset>
+
+            <label>Nombre del producto
+                <input type="text" name="name" placeholder="mouse" required>
+            </label>
+
+            <label>precio del producto
+                <input type="text" name="number" placeholder="135.2" required>
+            </label>
+
+            <label for="why">elige la categoria
+                <select name="why" id="why">
+                <option value="1">tecnologia</option>
+                <option value="2">accesorio</option>
+                </select>
+            </label>
+            </fieldset>
+
+            <button type="submit">agregar</button>
+        </form>
+    </section>
+</body>
+</html>
