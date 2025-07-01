@@ -1,71 +1,128 @@
-// Inicialización del proyecto
-console.log("¡Gestión de Datos con Objetos, Sets y Maps!");
-console.log("-".repeat(100));
-
-// Objeto Producto
-// se utiliza un array para mejorar el manejo de colecciones
-const productos = [
-    { id: 1, nombre: "Laptop", precio: 1500, categoria: "Electrónica" },
-    { id: 2, nombre: "Mouse", precio: 25, categoria: "Accesorios" },
-    { id: 3, nombre: "Teclado", precio: 50, categoria: "Accesorios" }
+// ------------------- Inicialización ------------------- //
+let productos = [
+  { id: 1, nombre: "Laptop",  precio: 1500, cantidad: 5,  categoria: "Electrónica" },
+  { id: 2, nombre: "Mouse",   precio: 25,   cantidad: 20, categoria: "Accesorios"  },
+  { id: 3, nombre: "Teclado", precio: 50,   cantidad: 15, categoria: "Accesorios"  }
 ];
-console.log("Objeto productos", productos);
-console.log("-".repeat(100));
 
-// funcion para validar entrada de productos
-function validarProductos({ id, nombre, precio, categoria }) {
-    if (typeof id !== "number" || id <= 0) throw new Error("ID invalido");
-    if (!nombre || typeof nombre !== "string") throw new Error(" Nombre vacio");
-    if (typeof precio !== "number" || precio < 0) throw new Error("precio invalido");
-    if (!categoria) throw new Error("categoria requerida");
+// ------------------- Validación ------------------- //
+function validarProductos({ nombre, precio, cantidad }) {
+  const regexNombre = /^[A-Za-zÁÉÍÓÚáéíóúÑñ ]{2,}$/;
+  if (!nombre || !regexNombre.test(nombre))                     throw new Error("Nombre vacío o con caracteres no permitidos");
+  if (typeof precio !== "number" || precio <= 0)                throw new Error("Precio inválido");
+  if (!Number.isInteger(cantidad) || cantidad <= 0)             throw new Error("Cantidad inválida");
 }
-productos.forEach(validarProductos);
 
-// set para las ID de productos
-// evita duplicados
-const setIds = new Set(productos.map(Producto => Producto.nombre));
-console.log("Set de productos únicos:", setIds);
-console.log("-".repeat(100));
+// ------------------- Estructuras auxiliares ------------------- //
+let setIds, mapCategorias;
+function reconstruirSetsYMaps() {
+  setIds = new Set(productos.map(producto => producto.id));
 
-// Map para agregar categorias a los productos
-// este diseño tiene como ventaja el añadir productos sin colisiones
-const mapCategorias = new Map();
-for (const { nombre, categoria } of productos) {
+  mapCategorias = new Map();
+  for (const { nombre, precio, cantidad, categoria } of productos) {
     if (!mapCategorias.has(categoria)) mapCategorias.set(categoria, []);
-    mapCategorias.get(categoria).push(nombre);
+    mapCategorias.get(categoria).push({ nombre, precio, cantidad });
+  }
 }
-console.log("Map de productos y categorías:", mapCategorias);
-console.log("-".repeat(100));
+reconstruirSetsYMaps();
 
-// Recorrer el objeto productos
-for (const producto of productos) {
-    console.log(`producto ID: ${producto.id}, Detalles:`, producto);
-};
-console.log("-".repeat(100));
+// ------------------- Render tabla ------------------- //
+function renderTabla() {
+  const tbody = document.querySelector("#tabla-productos tbody");
+  tbody.innerHTML = "";
+  productos.sort((a, b) => a.id - b.id).forEach(({ id, nombre, precio, cantidad, categoria }) => {
+    const fila = `
+      <tr>
+        <td>${nombre}</td>
+        <td>$${precio.toFixed(2)}</td>
+        <td>${cantidad}</td>
+        <td>${categoria}</td>
+        <td><button class="btn-eliminar" data-id="${id}">Eliminar</button></td>
+      </tr>`;
+    tbody.insertAdjacentHTML("beforeend", fila);
+  });
+}
 
+// ------------------- Render categorías ------------------- //
+function renderCategorias() {
+  const cont = document.querySelector("#lista-categorias");
+  cont.innerHTML = "";
+  mapCategorias.forEach((arr, categoria) => {
+    const lista = arr
+      .map(p => `<li>${p.nombre} — $${p.precio.toFixed(2)} — x${p.cantidad}</li>`)
+      .join("");
+    cont.insertAdjacentHTML("beforeend",
+      `<article class="categoria">
+         <h3>${categoria}</h3>
+         <ul>${lista}</ul>
+       </article>`);
+  });
+}
 
-// Recorrer Set de productos
-for (const id of setIds) {
-    console.log("ID único:", id);
-};
-console.log("-".repeat(100));
+// ------------------- Generar ID ------------------- //
+const generarId = () => productos.length ? Math.max(...productos.map(p => p.id)) + 1 : 1;
 
+// ------------------- Agregar producto ------------------- //
+document.querySelector("#form-producto").addEventListener("submit", e => {
+  e.preventDefault();
+  const data = new FormData(e.target);
 
-// Recorrer el map de productos
-mapCategorias.forEach((nombres, categoria) => {
-    console.log(`Categoria: ${categoria}, producto: ${nombres.join(", ")}`);
+  const nuevo = {
+    id:        generarId(),
+    nombre:    data.get("nombre").trim(),
+    precio:    Number(data.get("precio")),
+    cantidad:  Number(data.get("cantidad")),
+    categoria: data.get("categoria")
+  };
+
+  try {
+    validarProductos(nuevo);
+    if (productos.some(p => p.nombre.toLowerCase() === nuevo.nombre.toLowerCase()))
+      throw new Error("Ya existe un producto con ese nombre");
+
+    productos.push(nuevo);
+    reconstruirSetsYMaps();
+    renderTabla();
+    renderCategorias();
+    cantidadTotal();
+
+    e.target.reset();
+    e.target.nombre.focus();
+  } catch (err) { alert(err.message); }
 });
-console.log("-".repeat(100));
 
-// Pruebas 
-console.log("Pruebas completas de gestion de datos:");
-console.log("-".repeat(100));
-console.log("Lista de productos (Objetos):")
-console.table(productos)
-console.log("-".repeat(100));
-console.log("lista de productos únicos (Set):")
-console.table(Array.from(setIds));
-console.log("-".repeat(100));
-console.log("Categorias y productos (Map):")
-console.table(Array.from(mapCategorias.entries()));
-console.log("-".repeat(100));
+// ------------------- Eliminar producto ------------------- //
+document.querySelector("#tabla-productos").addEventListener("click", e => {
+  if (!e.target.matches(".btn-eliminar")) return;
+
+  const id = Number(e.target.dataset.id);
+  productos = productos.filter(p => p.id !== id);
+  reconstruirSetsYMaps();
+  renderTabla();
+  renderCategorias();
+});
+
+// ---------- Render tabla (Nombre, Precio, Valor total) ----------
+function cantidadTotal() {
+  const tbody = document.querySelector("#tabla-preciosTotales tbody");
+  tbody.innerHTML = "";
+
+  productos
+    .sort((a, b) => a.id - b.id)
+    .forEach(({ nombre, precio, cantidad }) => {
+      const total = precio * cantidad;
+      const fila = `
+        <tr>
+          <td>${nombre}</td>
+          <td>$${precio.toFixed(2)}</td>
+          <td>$${total.toFixed(2)}</td>
+        </tr>`;
+      tbody.insertAdjacentHTML("beforeend", fila);
+    });
+}
+
+// ------------------- Arranque ------------------- //
+productos.forEach(validarProductos);
+renderTabla();
+renderCategorias();
+cantidadTotal();
