@@ -1,39 +1,81 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src=""></script>
-    <link rel="stylesheet" href="style.css">
-    <title>gestion de inventario</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./style.css" />
+  <title>Gestión de Inventario</title>
 </head>
 <body>
-    <header>
-        <h1>gestion de inventarios</h1>
-    </header>
+  <header>
+    <h1>Gestión de Inventarios</h1>
+  </header>
+
+  <main>
     <section>
-      <h2 class="">agregar un producto nuevo</h2>
-        <form class="" method="post" action="/"><br>
-            <fieldset>
+      <h2>Agregar un producto nuevo</h2>
 
-            <label>Nombre del producto
-                <input type="text" name="name" placeholder="mouse" required>
+      <form id="form-producto">
+        <fieldset>
+            <label>
+                Nombre del producto
+                <input type="text" name="nombre" placeholder="Mouse" required />
             </label>
 
-            <label>precio del producto
-                <input type="text" name="number" placeholder="135.2" required>
+            <label>
+                Precio del producto
+                <input type="number" step="0.01" name="precio" placeholder="135.20" required />
             </label>
 
-            <label for="why">elige la categoria
-                <select name="why" id="why">
-                <option value="1">tecnologia</option>
-                <option value="2">accesorio</option>
+            <label>
+                Cantidad en almacén
+                <input type="number" name="cantidad" min="1" placeholder="10" required />
+            </label>
+
+            <label>
+            Elige la categoría
+                <select name="categoria" required>
+                    <option value="Electrónica">Tecnología</option>
+                    <option value="Accesorios">Accesorio</option>
                 </select>
             </label>
-            </fieldset>
+        </fieldset>
 
-            <button type="submit">agregar</button>
+        <button type="submit">Agregar</button>
         </form>
+
+        <!-- Tabla: nueva columna Cantidad y Eliminar -->
+        <table id="tabla-productos">
+            <thead>
+                <tr>
+                    <th>Nombre</th><th>Precio</th><th>Cantidad</th><th>Categoría</th><th>Acción</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
     </section>
+
+    <section>
+        <h2>Productos por categoría</h2>
+        <div id="lista-categorias"><!-- contenido dinámico --></div>
+    </section>
+
+    <section>
+    <h2>Listado de productos</h2>
+        <table id="tabla-preciosTotales">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Valor total</th>
+                </tr>
+            </thead>
+            <tbody><!-- filas dinámicas --></tbody>
+        </table>
+    </section>
+
+  </main>
+
+  <script src="./gestion_datos.js"></script>
 </body>
 </html>
