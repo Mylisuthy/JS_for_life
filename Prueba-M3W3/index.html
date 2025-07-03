@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./style.css" />
+  <title>Gestión de Inventario</title>
+</head>
+<body>
+  <header>
+    <h1>Gestión de Inventarios</h1>
+  </header>
+
+  <main>
+    <section>
+      <h2>Agregar un producto nuevo</h2>
+
+      <form id="form-producto">
+        <fieldset>
+            <label>
+                Nombre del producto
+                <input type="text" name="nombre" placeholder="Mouse" required />
+            </label>
+
+            <label>
+                Precio del producto
+                <input type="number" step="0.01" name="precio" placeholder="135.20" required />
+            </label>
+
+            <label>
+                Cantidad en almacén
+                <input type="number" name="cantidad" min="1" placeholder="10" required />
+            </label>
+
+            <label>
+            Elige la categoría
+                <select name="categoria" required>
+                    <option value="Electrónica">Tecnología</option>
+                    <option value="Accesorios">Accesorio</option>
+                </select>
+            </label>
+        </fieldset>
+
+        <button type="submit">Agregar</button>
+        </form>
+
+        <!-- Tabla: nueva columna Cantidad y Eliminar -->
+        <table id="tabla-productos">
+            <thead>
+                <tr>
+                    <th>Nombre</th><th>Precio</th><th>Cantidad</th><th>Categoría</th><th>Acción</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>Productos por categoría</h2>
+        <div id="lista-categorias"><!-- contenido dinámico --></div>
+    </section>
+
+    <section>
+    <h2>Listado de productos</h2>
+        <table id="tabla-preciosTotales">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Valor total</th>
+                </tr>
+            </thead>
+            <tbody><!-- filas dinámicas --></tbody>
+        </table>
+    </section>
+
+  </main>
+
+  <script src="./gestion_api.js"></script>
+</body>
+</html>
