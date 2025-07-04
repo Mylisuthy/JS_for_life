@@ -5,42 +5,48 @@
       "nombre": "Laptop",
       "precio": 1300,
       "cantidad": 5,
-      "categoria": "Electrónica"
+      "categoria": "Electrónica",
+      "fechaIngreso": "4/7/2025, 1:12:25 a.m."
     },
     {
       "id": "175160766669720011",
       "nombre": "Monitor",
       "precio": 300,
       "cantidad": 10,
-      "categoria": "Electrónica"
+      "categoria": "Electrónica",
+      "fechaIngreso": "4/7/2025, 1:13:43 a.m."
     },
     {
       "id": "175160770636272842",
       "nombre": "torre MSI",
       "precio": 3000,
       "cantidad": 5,
-      "categoria": "Electrónica"
+      "categoria": "Electrónica",
+      "fechaIngreso": "4/7/2025, 1:14:20 a.m."
     },
     {
       "id": "175160775521077145",
       "nombre": "mouse",
       "precio": 110,
       "cantidad": 10,
-      "categoria": "Accesorios"
+      "categoria": "Accesorios",
+      "fechaIngreso": "4/7/2025, 1:15:50 a.m."
     },
     {
       "id": "175160777375418526",
       "nombre": "auriculares",
       "precio": 250,
       "cantidad": 10,
-      "categoria": "Accesorios"
+      "categoria": "Accesorios",
+      "fechaIngreso": "4/7/2025, 1:16:45 a.m."
     },
     {
       "id": "175160778989895268",
       "nombre": "teclado",
       "precio": 200,
       "cantidad": 10,
-      "categoria": "Accesorios"
+      "categoria": "Accesorios",
+      "fechaIngreso": "4/7/2025, 1:17:20 a.m."
     }
   ]
 }
