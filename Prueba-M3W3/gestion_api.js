@@ -53,7 +53,16 @@ function renderTabla() {
   // Ordenamos los productos por ID y los mostramos en la tabla
   productos
     .sort((productoA, productoB) => Number(productoA.id) - Number(productoB.id))
-    .forEach(({ id, nombre, precio, cantidad, categoria }) => {
+    .forEach(({ id, nombre, precio, cantidad, categoria, fechaIngreso }) => {
+      // Creamos el menú de acciones como un dropdown (estilos en CSS)
+      const menuAcciones = `
+        <div class="menu-acciones">
+          <button class="btn-menu" data-id="${id}">⋮</button>
+          <div class="menu-dropdown">
+            <button class="btn-editar" data-id="${id}">Editar</button>
+            <button class="btn-eliminar" data-id="${id}">Eliminar</button>
+          </div>
+        </div>`;
       // Creamos la fila HTML para cada producto
       const filaHTML = `
         <tr>
@@ -61,14 +70,28 @@ function renderTabla() {
           <td>$${precio.toFixed(2)}</td>
           <td>${cantidad}</td>
           <td>${categoria}</td>
-          <td>
-            <button class="btn-editar" data-id="${id}">Editar</button>
-            <button class="btn-eliminar" data-id="${id}">Eliminar</button>
-          </td>
+          <td>${fechaIngreso ? fechaIngreso : '-'}</td>
+          <td>${menuAcciones}</td>
         </tr>`;
       // Insertamos la fila en la tabla
       cuerpoTabla.insertAdjacentHTML("beforeend", filaHTML);
     });
+
+  // Añadimos listeners para mostrar/ocultar el menú desplegable
+  cuerpoTabla.querySelectorAll('.btn-menu').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      // Cierra otros menús abiertos
+      cuerpoTabla.querySelectorAll('.menu-dropdown').forEach(drop => drop.style.display = 'none');
+      // Abre el menú de este botón
+      const menu = this.nextElementSibling;
+      if (menu) menu.style.display = 'block';
+    });
+  });
+  // Cierra el menú si se hace clic fuera
+  document.addEventListener('click', function() {
+    cuerpoTabla.querySelectorAll('.menu-dropdown').forEach(drop => drop.style.display = 'none');
+  });
 }
 
 // =================== Manejar botones Editar y Eliminar =================== //
@@ -93,13 +116,25 @@ document.querySelector("#tabla-productos").addEventListener("click", evento => {
       formulario.categoria.value = productoSeleccionado.categoria;
       productoEditando = productoSeleccionado;
       formulario.querySelector('button[type="submit"]').textContent = "Guardar cambios";
+      // Mostramos el botón cancelar
+      btnCancelar.style.display = 'inline-block';
     }
+    // Cerramos el menú desplegable si está abierto
+    if (evento.target.closest('.menu-dropdown')) evento.target.closest('.menu-dropdown').style.display = 'none';
     return;
   }
   // Si se hace clic en el botón Eliminar
   if (evento.target.matches(".btn-eliminar")) {
     const idProducto = String(evento.target.dataset.id);
+    const productoAEliminar = productos.find(producto => String(producto.id) === idProducto);
+    // Confirmación antes de eliminar
+    if (productoAEliminar) {
+      const confirmar = confirm(`¿Estás seguro que deseas eliminar el producto "${productoAEliminar.nombre}"?`);
+      if (!confirmar) return;
+    }
     eliminarProducto(idProducto);
+    // Cerramos el menú desplegable si está abierto
+    if (evento.target.closest('.menu-dropdown')) evento.target.closest('.menu-dropdown').style.display = 'none';
   }
 });
 
@@ -140,7 +175,7 @@ function renderCategorias() {
   mapCategorias.forEach((arr, categoria) => {
     // Creamos la lista de productos de la categoría
     const lista = arr
-      .map(productoCat => `<li>${productoCat.nombre} — $${productoCat.precio.toFixed(2)} — x${productoCat.cantidad}</li>`)
+      .map(productoCat => `<li>${productoCat.nombre} — $${productoCat.precio.toFixed(2)} — x${productoCat.cantidad} — Ingresado: ${productoCat.fechaIngreso ? productoCat.fechaIngreso : '-'}</li>`)
       .join("");
     cont.insertAdjacentHTML("beforeend",
       `<article class="categoria">
@@ -167,6 +202,29 @@ function buscarProductoPorId(idBuscado) {
 // Manejamos el envío del formulario para agregar o editar productos
 // Si productoEditando es null, se agrega un nuevo producto; si no, se actualiza el existente
 
+const formProducto = document.querySelector("#form-producto");
+// Creamos el botón cancelar solo una vez
+let btnCancelar = formProducto.querySelector('.btn-cancelar');
+if (!btnCancelar) {
+  btnCancelar = document.createElement('button');
+  btnCancelar.type = 'button';
+  btnCancelar.textContent = 'Cancelar';
+  btnCancelar.className = 'btn-cancelar';
+  btnCancelar.style.marginLeft = '1em';
+  btnCancelar.style.display = 'none';
+  formProducto.appendChild(btnCancelar);
+
+  btnCancelar.addEventListener('click', () => {
+    // Al cancelar, reseteamos el formulario y volvemos a modo agregar
+    formProducto.reset();
+    formProducto.nombre.focus();
+    productoEditando = null;
+    formProducto.querySelector('button[type="submit"]').textContent = "Agregar";
+    btnCancelar.style.display = 'none';
+  });
+}
+
+// Si productoEditando es null, se agrega un nuevo producto; si no, se actualiza el existente
 document.querySelector("#form-producto").addEventListener("submit", evento => {
   evento.preventDefault();
   const datosFormulario = new FormData(evento.target);
@@ -179,6 +237,7 @@ document.querySelector("#form-producto").addEventListener("submit", evento => {
       precio: Number(datosFormulario.get("precio")),
       cantidad: Number(datosFormulario.get("cantidad")),
       categoria: datosFormulario.get("categoria")
+      // fechaIngreso no se modifica al editar
     };
     try {
       validarProducto(productoActualizado);
@@ -187,6 +246,7 @@ document.querySelector("#form-producto").addEventListener("submit", evento => {
       evento.target.reset();
       evento.target.nombre.focus();
       evento.target.querySelector('button[type="submit"]').textContent = "Agregar";
+      btnCancelar.style.display = 'none';
     } catch (error) {
       alert(error.message);
     }
@@ -199,7 +259,8 @@ document.querySelector("#form-producto").addEventListener("submit", evento => {
     nombre:    datosFormulario.get("nombre").trim(),
     precio:    Number(datosFormulario.get("precio")),
     cantidad:  Number(datosFormulario.get("cantidad")),
-    categoria: datosFormulario.get("categoria")
+    categoria: datosFormulario.get("categoria"),
+    fechaIngreso: new Date().toLocaleString() // Fecha y hora local de ingreso
   };
 
   try {
@@ -252,8 +313,9 @@ function actualizarProducto(productoActualizado) {
 
 // =================== Validar producto antes de guardar =================== //
 function validarProducto(producto) {
-  // Expresión regular para validar nombres permitiendo letras y espacios (incluye acentos y ñ)
-  const regexNombre = /^[A-Za-zÁÉÍÓÚáéíóúÑñ ]{2,}$/;
+  // Expresión regular para validar nombres permitiendo letras, números, espacios y caracteres comunes en nombres comerciales
+  // Permite: letras, números, espacios, guiones, paréntesis, puntos, comas, barras, dos puntos, signos de suma, etc.
+  const regexNombre = /^[A-Za-zÁÉÍÓÚáéíóúÑñ0-9 .,:;\-()\[\]/+]+$/;
   // Validación de nombre: no vacío y solo caracteres permitidos
   if (!producto.nombre || !regexNombre.test(producto.nombre)) {
     throw new Error("Nombre vacío o con caracteres no permitidos");
