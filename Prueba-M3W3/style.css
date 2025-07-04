@@ -1,3 +1,58 @@
+/* Menú de acciones (dropdown) para cada producto */
+.menu-acciones {
+  position: relative;
+  display: inline-block;
+}
+.btn-menu {
+  padding: 0.3em 1em;
+  background: none;
+  border: none;
+  font-size: 1.2em;
+  cursor: pointer;
+  color: #0073e6;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+.btn-menu:hover {
+  background: #e3f0fc;
+}
+.menu-dropdown {
+  display: none;
+  position: absolute;
+  left: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  min-width: 120px;
+  z-index: 10;
+  box-shadow: 0 2px 8px #0002;
+  border-radius: 6px;
+  margin-top: 0.2em;
+}
+.menu-dropdown button {
+  width: 100%;
+  text-align: left;
+  padding: 0.5em 1em;
+  border: none;
+  background: none;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-editar {
+  color: #0073e6;
+  font-weight: 500;
+}
+.btn-editar:hover {
+  background: #e3f0fc;
+}
+.btn-eliminar {
+  color: #e53935;
+  font-weight: 500;
+}
+.btn-eliminar:hover {
+  background: #ffeaea;
+  color: #c62828;
+}
 /* Reset mínimo */
 * { 
     box-sizing: border-box; 
@@ -105,4 +160,18 @@ th      {
   border-radius: 4px;
   cursor: pointer;
 }
-.btn-eliminar:hover { background: #c62828; }
+/* Para el botón eliminar de la tabla (no menú) */
+.btn-eliminar:hover {
+  background: #c62828;
+}
+
+/* Para el botón eliminar del menú desplegable */
+.menu-dropdown .btn-eliminar {
+  background: none;
+  color: #e53935;
+  font-weight: 500;
+}
+.menu-dropdown .btn-eliminar:hover {
+  background: #ffeaea;
+  color: #c62828 !important;
+}
