@@ -1,32 +1,46 @@
 {
   "productos": [
     {
-      "id": 1,
+      "id": "175160763680272526",
       "nombre": "Laptop",
-      "precio": 1500,
+      "precio": 1300,
       "cantidad": 5,
       "categoria": "Electrónica"
     },
     {
-      "id": 2,
-      "nombre": "Mouse",
-      "precio": 25,
-      "cantidad": 20,
-      "categoria": "Accesorios"
-    },
-    {
-      "id": 3,
-      "nombre": "Teclado",
-      "precio": 50,
-      "cantidad": 15,
-      "categoria": "Accesorios"
-    },
-    {
-      "id": 4,
-      "nombre": "monitor",
-      "precio": 200,
+      "id": "175160766669720011",
+      "nombre": "Monitor",
+      "precio": 300,
       "cantidad": 10,
       "categoria": "Electrónica"
+    },
+    {
+      "id": "175160770636272842",
+      "nombre": "torre MSI",
+      "precio": 3000,
+      "cantidad": 5,
+      "categoria": "Electrónica"
+    },
+    {
+      "id": "175160775521077145",
+      "nombre": "mouse",
+      "precio": 110,
+      "cantidad": 10,
+      "categoria": "Accesorios"
+    },
+    {
+      "id": "175160777375418526",
+      "nombre": "auriculares",
+      "precio": 250,
+      "cantidad": 10,
+      "categoria": "Accesorios"
+    },
+    {
+      "id": "175160778989895268",
+      "nombre": "teclado",
+      "precio": 200,
+      "cantidad": 10,
+      "categoria": "Accesorios"
     }
   ]
 }
