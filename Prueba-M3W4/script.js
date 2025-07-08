@@ -1,59 +1,112 @@
-// evento para guardar datos en el local storage
-document.getElementById('saveButton').addEventListener('click', () =>{
-    const nameInput = document.getElementById('name');
-    const ageInput = document.getElementById('age');
+// ——————————————————————————————
+// Escuelita Riwi: manipulación de DOM y persistencia
+// Requisitos Moodle: getItem/setItem/removeItem, LSS, SS, DOM dinámico.
+// ——————————————————————————————
 
-    if (!nameInput || !ageInput) {
-        console.error('los elementos del formulario no existen.');
-        return;
-    }
-
-    const name = nameInput.value.trim();
-    const age = parseInt(ageInput.value);
-
-    if (name && !isNaN(age)) {
-        localStorage.setItem('userName', name);
-        localStorage.setItem('userAge', age);
-        displayData();
-    } else {
-        alert('por favor, ingresa un nombre valido y una edad numerica.');
-    }
+/**
+ * Inicializa la página:
+ *  - muestra datos si existen
+ *  - inicializa contador en SessionStorage
+ *  - registra handlers de botón
+ */
+document.addEventListener('DOMContentLoaded', () => {
+  displayData();           // muestra lo almacenado
+  initInteractionCount();  // prepara contador
+  document.getElementById('saveButton')
+          .addEventListener('click', onSave);
+  document.getElementById('clearButton')
+          .addEventListener('click', onClear);
 });
 
-// Funcion para mostrar datos almacenados
-function displayData() {
-    const name = localStorage.getItem('userName');
-    const age = localStorage.getItem('userAge');
-    const outputDiv = document.getElementById('output');
-    if (name && age) {
-        outputDiv.textContent = `hola ${name}, tienes ${age} años.`;
-    } else {
-        outputDiv.textContent = 'no hay datos almacenados.';
-    }
+/**
+ * Toma inputs, valida y si ok:
+ *  - guarda en LocalStorage
+ *  - actualiza contador
+ *  - refresca DOM
+ */
+function onSave() {
+  const nameInput = document.getElementById('name');
+  const ageInput  = document.getElementById('age');
+
+  const name = nameInput.value.trim();
+  const age  = parseInt(ageInput.value, 10);
+
+  // validaciones básicas
+  const regexNombre = /^[A-Za-zÁÉÍÓÚáéíóúÑñ ]{2,}$/;
+  if (!regexNombre.test(name)) {
+    alert('❌ Nombre inválido (solo letras y espacios, mínimo 2 caracteres).');
+    console.error('Validación nombre fallida:', name);
+    return;
+  }
+  if (isNaN(age) || age < 1 || age > 120) {
+    alert('❌ Edad inválida (número entero entre 1 y 120).');
+    console.error('Validación edad fallida:', ageInput.value);
+    return;
+  }
+
+  // guardo solo una clave “user” en LS
+  const user = { name, age };
+  localStorage.setItem('user', JSON.stringify(user));
+  console.log('Guardado en LocalStorage →', user);
+
+  incrementInteraction();
+  displayData();
 }
 
-// Al cargar la pagina, mostrar los datos almacenados
-window.onload = displayData;
+/**
+ * Limpia solo la clave `user` de LocalStorage,
+ * refresca DOM y cuenta en SessionStorage.
+ */
+function onClear() {
+  localStorage.removeItem('user');
+  console.log('LocalStorage: clave "user" eliminada');
+  incrementInteraction();
+  displayData();
+}
 
-// Inicializar contador de interacciones en Session Storage
-    if (!sessionStorage.getItem('interactionCount')) {
-        sessionStorage.setItem('interationCount', 0);
-    }
+/**
+ * Lee LocalStorage y pinta en DOM usando createElement/appends.
+ * Si no hay datos muestra mensaje por defecto.
+ */
+function displayData() {
+  const output = document.getElementById('output');
+  // limpio cualquier hijo anterior
+  while (output.firstChild) {
+    output.removeChild(output.firstChild);
+  }
 
-    // Actualizar contador de interacciones
-    function updateInteractionCount() {
-        let count = parseInt(sessionStorage.getItem('interactionCount'));
-        count++;
-        sessionStorage.setItem('interactionCount', count);
-        console.log(`interacciones en esta sesion ${count}`);
-    }
+  const raw = localStorage.getItem('user');
+  if (raw) {
+    const { name, age } = JSON.parse(raw);
+    const p = document.createElement('p');
+    p.textContent = `¡Hola ${name}! Tenés ${age} años.`;
+    output.appendChild(p);
+  } else {
+    const p = document.createElement('p');
+    p.textContent = 'No hay datos almacenados.';
+    output.appendChild(p);
+  }
 
-    // Asignar evento al contador
-    document.getElementById('saveButton').addEventListener('click', updateInteractionCount);
-    document.getElementById('clearButton').addEventListener('click', updateInteractionCount);
+  console.log('Display actualizado. LS =', localStorage.getItem('user'));
+}
 
-// Evento para limpiar los datos del local storage
-document.getElementById('clearButton').addEventListener('click', () => {
-    localStorage.clear();
-    displayData();
-})
+/**
+ * Inicializa contador de interacciones en SessionStorage
+ * (clave exacta: "interactionCount")
+ */
+function initInteractionCount() {
+  if (!sessionStorage.getItem('interactionCount')) {
+    sessionStorage.setItem('interactionCount', '0');
+  }
+  console.log('SessionStorage inicial:', sessionStorage.getItem('interactionCount'));
+}
+
+/**
+ * Incrementa en +1 el contador y lo guarda en SessionStorage.
+ */
+function incrementInteraction() {
+  let count = parseInt(sessionStorage.getItem('interactionCount'), 10) || 0;
+  count++;
+  sessionStorage.setItem('interactionCount', String(count));
+  console.log(`Interacciones en esta sesión: ${count}`);
+}
