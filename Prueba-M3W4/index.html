@@ -1,20 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escuelita Riwi</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Escuelita Riwi</title>
 </head>
 <body>
-    <form id="userForm">
-        <label for="name">nombre:</label>
-        <input type="text" name="name" id="name" required>
-        <label for="age">Edad:</label>
-        <input type="number" name="age" id="age" required>
-        <button type="button" id="saveButton">Guardar Datos</button>
-        <button type="button" id="clearButton">Limpiar Datos</button>
-    </form>
-    <div id="output"></div>
+
+  <form id="userForm">
+    <label for="name">nombre:</label>
+    <input type="text" id="name" name="name" required>
+
+    <label for="age">edad:</label>
+    <input type="number" id="age" name="age" required>
+
+    <button type="button" id="saveButton">Guardar Datos</button>
+    <button type="button" id="clearButton">Limpiar Datos</button>
+  </form>
+
+  <div id="output"></div>
+
+  <script src="script.js"></script>
 </body>
-<script src="./script.js"></script>
 </html>
