@@ -1,0 +1,37 @@
+[
+  {
+    "id": "p1",
+    "name": "Multímetro Digital",
+    "category": "Herramientas",
+    "price": 29.99,
+    "description": "Multímetro digital profesional para medición de voltaje, corriente y resistencia."
+  },
+  {
+    "id": "p2",
+    "name": "Soldador Eléctrico 60W",
+    "category": "Herramientas",
+    "price": 15.50,
+    "description": "Soldador de punta fina ideal para trabajos de electrónica."
+  },
+  {
+    "id": "p3",
+    "name": "Kit de Resistencias 1/4W",
+    "category": "Componentes",
+    "price": 7.99,
+    "description": "Kit surtido de resistencias de 1/4W, 600 piezas."
+  },
+  {
+    "id": "p4",
+    "name": "Protoboard 830 puntos",
+    "category": "Prototipado",
+    "price": 9.99,
+    "description": "Protoboard de alta calidad para prototipos electrónicos."
+  },
+  {
+    "id": "p5",
+    "name": "Fuente de Alimentación 30V 5A",
+    "category": "Instrumentos",
+    "price": 89.00,
+    "description": "Fuente regulable de laboratorio, pantalla digital."
+  }
+]

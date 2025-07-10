@@ -1,0 +1,58 @@
+{
+  "usuarios": [
+    {
+      "id": 1,
+      "nombre": "admin",
+      "correo": "admin@tienda.com",
+      "password": "Admin123",
+      "rol": "admin"
+    },
+    {
+      "id": 2,
+      "nombre": "juan",
+      "correo": "juan@mail.com",
+      "password": "Juan1234",
+      "rol": "user"
+    }
+  ],
+  "productos": [
+    {
+      "id": "P001",
+      "nombre": "Mouse Gamer",
+      "descripcion": "Mouse RGB con 6 botones programables",
+      "categoria": "Periféricos",
+      "precio": 120.50,
+      "stock": 30,
+      "imagen": "https://example.com/mouse.jpg"
+    },
+    {
+      "id": "P002",
+      "nombre": "Teclado Mecánico",
+      "descripcion": "Teclado retroiluminado con switches azules",
+      "categoria": "Periféricos",
+      "precio": 350.00,
+      "stock": 15,
+      "imagen": "https://example.com/teclado.jpg"
+    },
+    {
+      "id": "P003",
+      "nombre": "Monitor 24'' Full HD",
+      "descripcion": "Monitor LED 24 pulgadas, 75Hz, HDMI",
+      "categoria": "Monitores",
+      "precio": 2100.00,
+      "stock": 8,
+      "imagen": "https://example.com/monitor.jpg"
+    }
+  ],
+  "pedidos": [
+    {
+      "id": 1,
+      "usuarioId": 2,
+      "productos": [
+        { "productoId": "P001", "cantidad": 2 }
+      ],
+      "estado": "pendiente",
+      "fecha": "2025-07-10"
+    }
+  ]
+}

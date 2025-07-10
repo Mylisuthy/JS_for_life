@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ElectriksAPPK - Inventario Electrónica</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="assets/logo.png">
+</head>
+<body>
+  <header>
+    <img src="assets/logo.png" alt="Logo ElectriksAPPK" class="logo"/>
+    <h1>ElectriksAPPK</h1>
+    <nav id="main-nav" aria-label="Navegación principal">
+      <ul>
+        <li><button id="nav-inventory" class="nav-btn" aria-label="Inventario">Inventario</button></li>
+        <li><button id="nav-cart" class="nav-btn" aria-label="Carrito" style="display:none;">Carrito <span id="cart-count">0</span></button></li>
+        <li><button id="nav-logout" class="nav-btn" aria-label="Cerrar sesión" style="display:none;">Cerrar sesión</button></li>
+      </ul>
+    </nav>
+  </header>
+  <main id="spa-root">
+    <!-- Vistas SPA renderizadas dinámicamente aquí -->
+  </main>
+  <footer>
+    <p>&copy; 2025 ElectriksAPPK. Todos los derechos reservados.</p>
+  </footer>
+  <div id="modal" class="modal" aria-modal="true" role="dialog" style="display:none;"></div>
+  <script src="app.js" type="module"></script>
+</body>
+</html>
