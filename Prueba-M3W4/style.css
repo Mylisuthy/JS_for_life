@@ -8,6 +8,7 @@ body {
   min-height: 100vh;
   margin: 0;
 }
+
 .login-container {
   background: #fff;
   padding: 2rem 2.5rem;
@@ -19,25 +20,29 @@ body {
   flex-direction: column;
   gap: 1.2rem;
 }
+
 h2 {
   text-align: center;
   color: #2d3a4b;
   margin-bottom: 0.5rem;
 }
+
+
 label {
   color: #2d3a4b;
   font-weight: 500;
-  margin-bottom: 0.2rem;
+  margin: 20px 0 0 0;
 }
+
 input[type="text"], input[type="number"] {
   width: 100%;
   padding: 0.6rem;
   border: 1px solid #dbe2ea;
   border-radius: 6px;
   font-size: 1rem;
-  margin-bottom: 0.8rem;
   box-sizing: border-box;
 }
+
 button {
   width: 48%;
   padding: 0.6rem;
@@ -50,24 +55,88 @@ button {
   cursor: pointer;
   transition: background 0.2s;
 }
+
 button:hover {
   background: #195bb5;
 }
+
 .button-group {
   display: flex;
   justify-content: space-between;
   gap: 0.5rem;
 }
+
 #output {
   margin-top: 1.2rem;
   text-align: center;
   color: #2d3a4b;
   font-size: 1.08rem;
 }
+
+.error-container {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 0.8rem;
+}
+
+.error-message {
+  display: none; /* Ocultar por defecto */
+  color: red;
+  font-size: 0.9em;
+  margin-top: 5px; /* Separación mínima cuando es visible */
+}
+
+.input-group {
+  margin-bottom: 20px;
+}
+
 #interactionCounter {
   margin-top: 1.2rem;
   text-align: center;
-  color: #195bb5;
+  color: blue;
   font-size: 0.98rem;
   font-weight: 500;
+}
+
+button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+#resetSession {
+  background-color: #f44336;
+}
+
+#resetSession:hover {
+  background-color: #d32f2f;
+}
+
+#clearButton {
+  background-color: #ff9800;
+}
+
+#clearButton:hover {
+  background-color: #e68900;
+}
+
+#saveButton {
+  background-color: #2196F3;
+}
+
+#saveButton:hover {
+  background-color: #1976D2;
 }
