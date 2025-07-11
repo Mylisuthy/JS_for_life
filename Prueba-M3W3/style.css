@@ -1,8 +1,218 @@
-/* Menú de acciones (dropdown) para cada producto */
-.menu-acciones {
-  position: relative;
-  display: inline-block;
+/* Variables de color y sombra para reutilización */
+:root {
+  --verde-principal: #4caf50;
+  --verde-claro: #e6f9d5;
+  --verde-medio: #7ec850;
+  --verde-hover: #c8e6c9;
+  --marron-claro: #f9f6f2;
+  --marron-borde: #bca177;
+  --sombra-verde: 0 2px 8px #7ec85022;
+  --sombra-marron: 0 4px 16px #bca17722;
+  --blanco: #fff;
 }
+
+/* Optimización y limpieza de CSS */
+
+/* Reset mínimo */
+* { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+}
+
+/* Estilos globales */
+body {
+    font-family: system-ui, sans-serif;
+    background: var(--marron-claro);
+    color: #2e4632;
+}
+
+/* Estilos de encabezado */
+header {
+    background: linear-gradient(90deg, var(--verde-medio) 0%, var(--verde-principal) 100%);
+    color: var(--blanco);
+    padding: 1.5rem 1rem 1.2rem 1rem;
+    text-align: center;
+    box-shadow: 0 2px 8px #7ec85033;
+}
+header h1 {
+    margin: 0 auto 0.2em auto;
+    font-size: 2.3rem;
+    font-family: 'Segoe UI', 'Arial', sans-serif;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #388e3c;
+    text-shadow: 0 2px 8px #7ec85033;
+    text-transform: capitalize;
+}
+
+/* Estilos de contenido principal */
+main {
+    max-width: 900px;
+    margin: 2.5rem auto 2rem auto;
+    padding: 0 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2.2rem;
+}
+
+section { margin-bottom: 2.2rem; background: none; }
+h2 {
+  color: var(--verde-principal);
+  margin-bottom: 1.1rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-align: left;
+}
+
+/* Formularios y controles */
+form, .accordion, .inventario-categoria-content {
+  background: var(--blanco);
+  border-radius: 8px;
+  box-shadow: var(--sombra-verde);
+}
+form {
+  padding: 1.2rem;
+  margin-bottom: 0;
+}
+fieldset {
+  border: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 200px;
+  font-size: .97rem;
+  color: #3b5e2b;
+}
+
+input, select {
+  padding: .4rem;
+  border: 1px solid var(--verde-claro);
+  border-radius: 4px;
+  background: #f6fff0;
+}
+
+/* Botones */
+#form-producto .form-botones {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7em;
+  margin-top: 1.2em;
+}
+#form-producto button[type="submit"],
+#form-producto .btn-cancelar {
+  font-size: 1.1em;
+  min-width: 160px;
+  margin: 0;
+  border-radius: 4px;
+  padding: 0.4em 1.2em;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 1px 4px #7ec85022;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+#form-producto button[type="submit"] {
+  background: linear-gradient(90deg, var(--verde-medio) 0%, var(--verde-principal) 100%);
+  color: var(--blanco);
+}
+#form-producto .btn-cancelar {
+  background: var(--verde-claro);
+  color: #3b5e2b;
+}
+#form-producto .btn-cancelar:hover {
+  background: var(--verde-hover);
+}
+
+/* Acordeones */
+.accordion {
+  margin-top: 2rem;
+  border-radius: 16px;
+  background: none;
+  box-shadow: none;
+  overflow: visible;
+}
+.accordion-item, .inventario-categoria {
+  background: none;
+  border-radius: 0;
+  box-shadow: none;
+  margin-bottom: 1.2rem;
+  position: static;
+  z-index: auto;
+}
+.accordion-header, .inventario-categoria-header {
+  width: 100%;
+  text-align: left;
+  background: linear-gradient(90deg, var(--verde-medio) 0%, var(--verde-principal) 100%);
+  color: var(--blanco);
+  border: none;
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 8px 8px 0 0;
+  transition: background 0.2s;
+  position: relative;
+  z-index: 2;
+}
+.accordion-header[aria-expanded="true"],
+.accordion-header:focus,
+.inventario-categoria-header[aria-expanded="true"] {
+  background: var(--verde-principal);
+}
+.accordion-content, .inventario-categoria-content {
+  display: none;
+  padding: 1.2rem 1rem 1.5rem 1rem;
+  background: var(--blanco);
+  border-radius: 0 0 16px 16px;
+  box-shadow: var(--sombra-marron);
+  border: 1.5px solid var(--verde-claro);
+  margin-top: 0;
+  position: relative;
+  z-index: 1;
+  overflow: visible;
+}
+.accordion-item.active .accordion-content,
+.inventario-categoria.active .inventario-categoria-content {
+  display: block;
+}
+
+/* Tablas */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  border-radius: 14px;
+  box-shadow: var(--sombra-verde);
+  overflow: hidden;
+  background: var(--blanco);
+  border: 1px solid var(--verde-claro);
+  font-size: 1.04em;
+}
+th, td {
+  border: 1px solid var(--verde-claro);
+  padding: .7rem .5rem;
+  text-align: left;
+}
+th {
+  background: var(--verde-claro);
+  color: #388e3c;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  font-size: 1.07em;
+}
+tbody tr:nth-child(even) { background: #f3fbe8; }
+tbody tr:hover { background: #d6f5c6; transition: background 0.2s; }
+
+/* Menú de acciones y popover de fecha */
+.menu-acciones { position: relative; display: inline-block; }
 .btn-menu {
   padding: 0.3em 1em;
   background: none;
@@ -13,20 +223,22 @@
   border-radius: 4px;
   transition: background 0.2s;
 }
-.btn-menu:hover {
-  background: #e3f0fc;
-}
-.menu-dropdown {
+.btn-menu:hover { background: #e3f0fc; }
+.menu-dropdown, .fecha-edicion-pop {
+  position: fixed;
+  z-index: 2147483647;
+  background: var(--blanco);
+  border-radius: 14px;
+  box-shadow: 0 4px 24px #bca17733, 0 1.5px 8px #7ec85022;
+  border: 1.5px solid var(--marron-borde);
+  min-width: 200px;
+  padding: 1em 1.5em;
+  font-size: 1.04em;
+  text-align: center;
+  pointer-events: auto;
+  max-width: 90vw;
+  font-weight: 500;
   display: none;
-  position: absolute;
-  left: 0;
-  background: #fff;
-  border: 1px solid #ccc;
-  min-width: 120px;
-  z-index: 10;
-  box-shadow: 0 2px 8px #0002;
-  border-radius: 6px;
-  margin-top: 0.2em;
 }
 .menu-dropdown button {
   width: 100%;
@@ -38,140 +250,104 @@
   cursor: pointer;
   transition: background 0.2s;
 }
-.btn-editar {
-  color: #0073e6;
-  font-weight: 500;
-}
-.btn-editar:hover {
-  background: #e3f0fc;
-}
-.btn-eliminar {
-  color: #e53935;
-  font-weight: 500;
-}
-.btn-eliminar:hover {
-  background: #ffeaea;
-  color: #c62828;
-}
-/* Reset mínimo */
-* { 
-    box-sizing: border-box; 
-    margin: 0; 
-    padding: 0; 
-}
+.btn-editar { color: #0073e6; font-weight: 500; }
+.btn-editar:hover { background: #e3f0fc; }
+.btn-eliminar { color: #e53935; font-weight: 500; }
+.btn-eliminar:hover { background: #ffeaea; color: #c62828; }
 
-body   { 
-    font-family: system-ui, sans-serif; 
-    background: #f5f7fa; 
-    color: #333; 
-}
-header { 
-    background: #0073e6; 
-    color: #fff; 
-    padding: 1rem; 
-    text-align: center; 
-}
-main   { 
-    max-width: 800px; 
-    margin: 2rem auto; 
-    padding: 0 1rem; 
-}
-
-h1, h2 { 
-    margin-bottom: .8rem; 
-}
-h3     { 
-    margin-bottom: .4rem; 
-    color: #0073e6; 
-}
-
-form   { 
-    background: #fff; 
-    padding: 1rem; 
-    border-radius: 6px; 
-    box-shadow: 0 2px 4px #0001; 
-    margin-bottom: 2rem; 
-}
-fieldset { 
-    border: none; 
-    display: flex; 
-    flex-wrap: wrap; 
-    gap: 1rem; 
-    margin-bottom: 1rem; 
-}
-label   { 
-    display: flex; 
-    flex-direction: column; 
-    flex: 1 1 200px; 
-    font-size: .9rem; 
-}
-input, select { 
-    padding: .4rem; 
-    border: 1px solid #ccc; 
-    border-radius: 4px; 
-}
-
-button  { 
-    padding: .5rem 1rem; 
-    background: #0073e6; 
-    color: #fff; 
-    border: none; 
-    border-radius: 4px; 
-    cursor: pointer; 
-}
-button:hover { 
-    background: #005abd; 
-}
-
-table   { 
-    width: 100%; 
-    border-collapse: collapse; 
-    margin-top: 1rem; 
-    background: #fff; 
-}
-th, td  { 
-    border: 1px solid #e0e0e0; 
-    padding: .6rem .4rem; 
-    text-align: left; 
-}
-th      { 
-    background: #f0f4f8; 
-}
-
-.categoria { 
-    background: #fff; 
-    padding: 1rem; margin-top: 1rem; 
-    border-radius: 6px; 
-    box-shadow: 0 2px 4px #0001; 
-}
-.categoria ul { 
-    list-style: disc inside; 
-    margin-top: .5rem; 
-}
-.categoria li { 
-    margin: .2rem 0; 
-}
-
-.btn-eliminar {
-  background: #e53935;
-  color: #fff;
-  border: none;
-  padding: .3rem .7rem;
-  border-radius: 4px;
+.fecha-ingreso-btn {
+  background: var(--verde-claro);
+  border: 1.5px solid var(--verde-claro);
+  color: #388e3c;
+  text-decoration: none;
   cursor: pointer;
+  font-size: 1em;
+  position: relative;
+  border-radius: 8px;
+  padding: 0.25em 0.9em;
+  font-weight: 600;
+  box-shadow: 0 1px 4px #7ec85022;
+  transition: background 0.2s, border 0.2s;
 }
-/* Para el botón eliminar de la tabla (no menú) */
-.btn-eliminar:hover {
-  background: #c62828;
+.fecha-ingreso-btn:focus,
+.fecha-ingreso-btn:hover {
+  background: #d6f5c6;
+  border: 1.5px solid var(--verde-medio);
+  outline: none;
 }
 
-/* Para el botón eliminar del menú desplegable */
-.menu-dropdown .btn-eliminar {
-  background: none;
-  color: #e53935;
-  font-weight: 500;
+/* Mensaje formulario */
+#mensaje-formulario {
+  margin: 0.5em 0 0.5em 0;
+  font-size: 1em;
+  min-height: 1.5em;
 }
-.menu-dropdown .btn-eliminar:hover {
-  background: #ffeaea;
-  color: #c62828 !important;
+#mensaje-formulario.success {
+  color: #2e7d32;
+  background: #e8f5e9;
+  border-radius: 4px;
+  padding: 0.3em 0.7em;
+}
+#mensaje-formulario.error {
+  color: #c62828;
+  background: #ffebee;
+  border-radius: 4px;
+  padding: 0.3em 0.7em;
+}
+
+/* Popover de fecha edición encapsulado */
+.fecha-edicion-pop {
+    display: none;
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 2.2em;
+    background: #fffbe6;
+    color: #4b3c1a;
+    border: 2px solid #bca177;
+    border-radius: 14px;
+    box-shadow: 0 4px 24px #bca17733, 0 1.5px 8px #7ec85022;
+    padding: 1em 1.5em;
+    z-index: 2147483647;
+    font-size: 1.04em;
+    min-width: 200px;
+    text-align: center;
+    pointer-events: auto;
+    max-width: 90vw;
+    font-weight: 500;
+}
+
+/* Superposición para popover de fecha y menú de acciones */
+.fecha-edicion-pop.mostrar-superposicion,
+.menu-dropdown.mostrar-superposicion {
+    z-index: 100010 !important;
+    box-shadow: 0 8px 32px #bca17755, 0 0 0 9999px rgba(80,60,30,0.12);
+}
+
+/* Backdrop para superposición (opcional, si se quiere oscurecer el fondo) */
+.superposicion-backdrop {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(80,60,30,0.12);
+    z-index: 100000;
+    pointer-events: auto;
+}
+
+/* Solo el acordeón activo permite overflow visible para popovers y menús */
+.accordion-content,
+.inventario-categoria-content {
+    overflow: hidden;
+}
+.accordion-item.active .accordion-content,
+.inventario-categoria.active .inventario-categoria-content {
+    overflow: visible;
+}
+
+.accordion,
+.accordion-item,
+.inventario-categoria,
+.inventario-categoria-content,
+.accordion-content {
+    position: static !important;
+    z-index: auto !important;
 }

@@ -8,72 +8,84 @@
 </head>
 <body>
   <header>
-    <h1>Gestión de Inventarios</h1>
+    <h1>san patricio garden</h1>
   </header>
+
 
   <main>
     <section>
       <h2>Agregar un producto nuevo</h2>
-
       <form id="form-producto">
         <fieldset>
-            <label>
-                Nombre del producto
-                <input type="text" name="nombre" placeholder="Mouse" required />
-            </label>
-
-            <label>
-                Precio del producto
-                <input type="number" step="0.01" name="precio" placeholder="135.20" required />
-            </label>
-
-            <label>
-                Cantidad en almacén
-                <input type="number" name="cantidad" min="1" placeholder="10" required />
-            </label>
-
-            <label>
+          <label>
+            Nombre del producto
+            <input type="text" name="nombre" placeholder="Ej: Tomate, Pollo, Manzana" required />
+          </label>
+          <label>
+            Precio del producto
+            <input type="number" step="0.01" name="precio" placeholder="135.20" required />
+          </label>
+          <label>
+            Tipo de cantidad
+            <select name="tipoCantidad" id="tipoCantidad" required>
+              <option value="unidades">Unidades (envasados)</option>
+              <option value="kilogramos">Kilogramos (uso diario)</option>
+            </select>
+          </label>
+          <label id="label-cantidad-unidades">
+            Cantidad en almacén (unidades)
+            <input type="number" name="cantidadUnidades" min="1" placeholder="10" />
+          </label>
+          <label id="label-cantidad-kilos" style="display:none">
+            Cantidad en almacén (kg)
+            <input type="number" name="cantidadKilos" min="0.01" step="0.01" placeholder="5.5" />
+          </label>
+          <label>
             Elige la categoría
-                <select name="categoria" required>
-                    <option value="Electrónica">Tecnología</option>
-                    <option value="Accesorios">Accesorio</option>
-                </select>
-            </label>
+            <select name="categoria" required>
+              <option value="Vegetales">Vegetales</option>
+              <option value="Frutas">Frutas</option>
+              <option value="Carnes">Carnes</option>
+              <option value="Otros">Otros</option>
+            </select>
+          </label>
         </fieldset>
+        <div id="mensaje-formulario"></div>
+        <div class="form-botones">
+          <button type="submit">Agregar</button>
+        </div>
+      </form>
+    </section>
 
-        <button type="submit">Agregar</button>
-        </form>
-
-        <!-- Tabla: nueva columna Cantidad y Eliminar -->
-        <table id="tabla-productos">
+    <!-- Accordion para visualización de productos -->
+    <section class="accordion">
+      <div class="accordion-item">
+        <button class="accordion-header" type="button">Últimos productos ingresados</button>
+        <div class="accordion-content">
+          <table id="tabla-productos">
             <thead>
-                <tr>
-                    <th>Nombre</th><th>Precio</th><th>Cantidad</th><th>Categoría</th><th>Fecha de ingreso</th><th>Acciones</th>
-                </tr>
+              <tr>
+                <th>Nombre</th>
+                <th>Cantidad</th>
+                <th>Categoría</th>
+                <th>Fecha de ingreso</th>
+              </tr>
             </thead>
             <tbody></tbody>
-        </table>
+          </table>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-header" type="button">Inventario y acciones</button>
+        <div class="accordion-content">
+          <div id="inventario-acordeon-categorias"><!-- Aquí se renderizarán las categorías como subacordeón --></div>
+          <div class="total-inventario-container" style="margin:1.5rem 0 0 0; text-align:right">
+            <strong>Total en inventario: <span id="valor-total-global">$0.00</span></strong>
+          </div>
+          <!-- tabla-inventario eliminada: ya no se usa para visualización ni lógica -->
+        </div>
+      </div>
     </section>
-
-    <section>
-        <h2>Productos por categoría</h2>
-        <div id="lista-categorias"><!-- contenido dinámico --></div>
-    </section>
-
-    <section>
-    <h2>Listado de productos</h2>
-        <table id="tabla-preciosTotales">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Precio</th>
-                    <th>Valor total</th>
-                </tr>
-            </thead>
-            <tbody><!-- filas dinámicas --></tbody>
-        </table>
-    </section>
-
   </main>
 
   <script src="./gestion_api.js"></script>

@@ -1,52 +1,114 @@
 {
   "productos": [
     {
-      "id": "175160763680272526",
-      "nombre": "Laptop",
-      "precio": 1300,
-      "cantidad": 5,
-      "categoria": "Electrónica",
-      "fechaIngreso": "4/7/2025, 1:12:25 a.m."
+      "id": "1",
+      "nombre": "Tomate Saladette",
+      "precio": 20,
+      "cantidad": 35,
+      "tipoCantidad": "kilogramos",
+      "categoria": "Vegetales",
+      "fechaIngreso": "4/7/2025, 8:12:25 a.m.",
+      "fechaEdicion": "4/7/2025, 9:34:41 p.m."
     },
     {
-      "id": "175160766669720011",
-      "nombre": "Monitor",
-      "precio": 300,
+      "id": "2",
+      "nombre": "Zanahoria",
+      "precio": 16,
+      "cantidad": 25,
+      "tipoCantidad": "kilogramos",
+      "categoria": "Vegetales",
+      "fechaIngreso": "4/7/2025, 8:15:50 a.m."
+    },
+    {
+      "id": "3",
+      "nombre": "Cebolla Blanca",
+      "precio": 19.8,
+      "cantidad": 20,
+      "tipoCantidad": "kilogramos",
+      "categoria": "Vegetales",
+      "fechaIngreso": "4/7/2025, 7:17:39 p.m."
+    },
+    {
+      "id": "4",
+      "nombre": "Manzana Gala",
+      "precio": 35,
+      "cantidad": 18,
+      "tipoCantidad": "kilogramos",
+      "categoria": "Frutas",
+      "fechaIngreso": "4/7/2025, 8:13:43 a.m.",
+      "fechaEdicion": "4/7/2025, 9:02:18 p.m."
+    },
+    {
+      "id": "5",
+      "nombre": "Plátano Tabasco",
+      "precio": 17.5,
+      "cantidad": 22,
+      "tipoCantidad": "kilogramos",
+      "categoria": "Frutas",
+      "fechaIngreso": "4/7/2025, 7:13:42 p.m."
+    },
+    {
+      "id": "6",
+      "nombre": "Naranja Valencia",
+      "precio": 14.2,
+      "cantidad": 30,
+      "tipoCantidad": "kilogramos",
+      "categoria": "Frutas",
+      "fechaIngreso": "4/7/2025, 7:23:43 p.m."
+    },
+    {
+      "id": "7",
+      "nombre": "Pechuga de Pollo Fresca",
+      "precio": 89,
+      "cantidad": 15,
+      "tipoCantidad": "kilogramos",
+      "categoria": "Carnes",
+      "fechaIngreso": "4/7/2025, 8:14:20 a.m."
+    },
+    {
+      "id": "8",
+      "nombre": "Filete de Res",
+      "precio": 185,
       "cantidad": 10,
-      "categoria": "Electrónica",
-      "fechaIngreso": "4/7/2025, 1:13:43 a.m."
+      "tipoCantidad": "kilogramos",
+      "categoria": "Carnes",
+      "fechaIngreso": "4/7/2025, 8:18:54 a.m."
     },
     {
-      "id": "175160770636272842",
-      "nombre": "torre MSI",
-      "precio": 3000,
-      "cantidad": 5,
-      "categoria": "Electrónica",
-      "fechaIngreso": "4/7/2025, 1:14:20 a.m."
+      "id": "9",
+      "nombre": "Chuleta de Cerdo",
+      "precio": 98.5,
+      "cantidad": 12,
+      "tipoCantidad": "kilogramos",
+      "categoria": "Carnes",
+      "fechaIngreso": "4/7/2025, 8:20:10 a.m."
     },
     {
-      "id": "175160775521077145",
-      "nombre": "mouse",
-      "precio": 110,
-      "cantidad": 10,
-      "categoria": "Accesorios",
-      "fechaIngreso": "4/7/2025, 1:15:50 a.m."
+      "id": "10",
+      "nombre": "Yogur Natural 1L",
+      "precio": 22.5,
+      "cantidad": 8,
+      "tipoCantidad": "unidades",
+      "categoria": "Otros",
+      "fechaIngreso": "4/7/2025, 8:16:45 a.m."
     },
     {
-      "id": "175160777375418526",
-      "nombre": "auriculares",
-      "precio": 250,
-      "cantidad": 10,
-      "categoria": "Accesorios",
-      "fechaIngreso": "4/7/2025, 1:16:45 a.m."
+      "id": "11",
+      "nombre": "Queso Fresco 500g",
+      "precio": 45,
+      "cantidad": 20,
+      "tipoCantidad": "unidades",
+      "categoria": "Otros",
+      "fechaIngreso": "4/7/2025, 8:17:20 a.m."
     },
     {
-      "id": "175160778989895268",
-      "nombre": "teclado",
-      "precio": 200,
-      "cantidad": 10,
-      "categoria": "Accesorios",
-      "fechaIngreso": "4/7/2025, 1:17:20 a.m."
+      "id": "12",
+      "nombre": "Jugo de Naranja 300ml",
+      "precio": 13.5,
+      "cantidad": 25,
+      "tipoCantidad": "unidades",
+      "categoria": "Otros",
+      "fechaIngreso": "4/7/2025, 7:23:43 p.m."
     }
   ]
 }

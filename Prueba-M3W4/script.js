@@ -34,12 +34,12 @@ function onSave() {
   // validaciones básicas
   const regexNombre = /^[A-Za-zÁÉÍÓÚáéíóúÑñ ]{2,}$/;
   if (!regexNombre.test(name)) {
-    alert('❌ Nombre inválido (solo letras y espacios, mínimo 2 caracteres).');
+    alert('Nombre inválido (solo letras y espacios, mínimo 2 caracteres).');
     console.error('Validación nombre fallida:', name);
     return;
   }
   if (isNaN(age) || age < 1 || age > 120) {
-    alert('❌ Edad inválida (número entero entre 1 y 120).');
+    alert('Edad inválida (número entero entre 1 y 120).');
     console.error('Validación edad fallida:', ageInput.value);
     return;
   }

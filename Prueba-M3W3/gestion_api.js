@@ -1,166 +1,216 @@
-// =================== Cargar productos desde el servidor =================== //
+// =================== Cargar productos desde el servidor ===================
+// Descarga los productos del backend, inicializa estructuras y renderiza la UI principal
 fetch('http://localhost:3000/productos')
   .then(response => response.json())
   .then(data => {
-    // Convertimos todos los IDs de los productos a string para evitar problemas de tipo
     productos = data.map(productoDelServidor => ({
       ...productoDelServidor,
       id: String(productoDelServidor.id)
     }));
     reconstruirSetsYMaps();
-    renderTabla();
-    renderCategorias();
-    renderTotales();
+    renderUltimosIngresados();
+    renderInventario();
+    inicializarAccordion();
   })
   .catch(error => console.error("Error al obtener productos:", error));
 
-// =================== Variables y estructuras auxiliares =================== //
+// Variables globales para productos y control de IDs
+let productos = [];
+let setIds;
+let idCounter = 1;
 
-let productos = []; // Lista principal de productos
-let setIds;         // Set para IDs únicos
-let mapCategorias;  // Mapa de categorías a productos
-let idCounter = 1;  // Contador global para IDs únicos
-
-/**
- * Reconstruye los sets y mapas auxiliares a partir de la lista de productos.
- * También actualiza el contador de IDs.
- */
+// Reconstruye el set de IDs y el contador de IDs a partir del array de productos
 function reconstruirSetsYMaps() {
-  // Creamos un Set con todos los IDs de los productos (como string) para asegurar unicidad
   setIds = new Set(productos.map(producto => String(producto.id)));
-
-  // Buscamos el ID más alto y sumamos 1 para el próximo producto
   if (productos.length > 0) {
     idCounter = Math.max(...productos.map(producto => Number(producto.id))) + 1;
   } else {
     idCounter = 1;
   }
-
-  // Creamos un Map donde la clave es la categoría y el valor es un array de productos de esa categoría
-  mapCategorias = new Map();
-  for (const { nombre, precio, cantidad, categoria } of productos) {
-    if (!mapCategorias.has(categoria)) mapCategorias.set(categoria, []);
-    mapCategorias.get(categoria).push({ nombre, precio, cantidad });
-  }
 }
 
-// =================== Renderizar tabla de productos =================== //
-function renderTabla() {
-  // Seleccionamos el cuerpo de la tabla donde se mostrarán los productos
+// Renderiza la tabla de "últimos ingresados" ordenando por fecha de ingreso
+function renderUltimosIngresados() {
   const cuerpoTabla = document.querySelector("#tabla-productos tbody");
-  // Limpiamos el contenido anterior de la tabla
   cuerpoTabla.innerHTML = "";
-  // Ordenamos los productos por ID y los mostramos en la tabla
   productos
-    .sort((productoA, productoB) => Number(productoA.id) - Number(productoB.id))
-    .forEach(({ id, nombre, precio, cantidad, categoria, fechaIngreso }) => {
-      // Creamos el menú de acciones como un dropdown (estilos en CSS)
-      const menuAcciones = `
-        <div class="menu-acciones">
-          <button class="btn-menu" data-id="${id}">⋮</button>
-          <div class="menu-dropdown">
-            <button class="btn-editar" data-id="${id}">Editar</button>
-            <button class="btn-eliminar" data-id="${id}">Eliminar</button>
-          </div>
-        </div>`;
-      // Creamos la fila HTML para cada producto
+    .slice()
+    .sort((a, b) => new Date(b.fechaIngreso) - new Date(a.fechaIngreso))
+    .forEach(({ nombre, cantidad, tipoCantidad, categoria, fechaIngreso }) => {
+      let cantidadStr = tipoCantidad === 'kilogramos' ? `${cantidad} kg` : `${cantidad} u.`;
       const filaHTML = `
         <tr>
           <td>${nombre}</td>
-          <td>$${precio.toFixed(2)}</td>
-          <td>${cantidad}</td>
+          <td>${cantidadStr}</td>
           <td>${categoria}</td>
           <td>${fechaIngreso ? fechaIngreso : '-'}</td>
-          <td>${menuAcciones}</td>
         </tr>`;
-      // Insertamos la fila en la tabla
       cuerpoTabla.insertAdjacentHTML("beforeend", filaHTML);
     });
+}
 
-  // Añadimos listeners para mostrar/ocultar el menú desplegable
-  cuerpoTabla.querySelectorAll('.btn-menu').forEach(btn => {
-    btn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      // Cierra otros menús abiertos
-      cuerpoTabla.querySelectorAll('.menu-dropdown').forEach(drop => drop.style.display = 'none');
-      // Abre el menú de este botón
-      const menu = this.nextElementSibling;
-      if (menu) menu.style.display = 'block';
+// Renderiza el inventario agrupado por categorías en acordeones, con menú de acciones y popover de fechas
+function renderInventario() {
+  const cont = document.getElementById("inventario-acordeon-categorias");
+  if (!cont) return;
+  cont.innerHTML = "";
+  const categorias = {};
+  productos.forEach(prod => {
+    if (!categorias[prod.categoria]) categorias[prod.categoria] = [];
+    categorias[prod.categoria].push(prod);
+  });
+  let totalGlobal = 0;
+  Object.entries(categorias).forEach(([categoria, arr], idx) => {
+    let filas = arr.map(prod => {
+      let cantidadStr = prod.tipoCantidad === 'kilogramos' ? `${prod.cantidad} kg` : `${prod.cantidad} u.`;
+      const valorTotal = prod.precio * prod.cantidad;
+      totalGlobal += valorTotal;
+      const menuAcciones = `
+        <div class=\"menu-acciones\">
+          <button class=\"btn-menu\" data-id=\"${prod.id}\">⋮</button>
+          <div class=\"menu-dropdown\">
+            <button class=\"btn-editar\" data-id=\"${prod.id}\">Editar</button>
+            <button class=\"btn-eliminar\" data-id=\"${prod.id}\">Eliminar</button>
+          </div>
+        </div>`;
+      const fechaIngresoBtn = `<button class=\"fecha-ingreso-btn\" tabindex=\"0\">${prod.fechaIngreso ? prod.fechaIngreso.split(',')[0] : '-'}</button>`;
+      const fechaEdicionPop = `<span class=\"fecha-edicion-pop\">${prod.fechaEdicion ? 'Última edición: ' + prod.fechaEdicion : 'Sin ediciones'}</span>`;
+      return `<tr>
+        <td>${prod.nombre}</td>
+        <td>$${prod.precio.toFixed(2)}</td>
+        <td>${cantidadStr}</td>
+        <td>$${valorTotal.toFixed(2)}</td>
+        <td>${menuAcciones}</td>
+        <td style=\"position:relative\">${fechaIngresoBtn}${fechaEdicionPop}</td>
+      </tr>`;
+    }).join('');
+    cont.insertAdjacentHTML('beforeend', `
+      <div class=\"inventario-categoria\">
+        <button class=\"inventario-categoria-header\" type=\"button\" aria-expanded=\"${idx===0?'true':'false'}\">${categoria}</button>
+        <div class=\"inventario-categoria-content\" style=\"display:${idx===0?'block':'none'}\">
+          <table>
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Valor total</th>
+                <th>Acciones</th>
+                <th>Fecha</th>
+              </tr>
+            </thead>
+            <tbody>${filas}</tbody>
+          </table>
+        </div>
+      </div>
+    `);
+  });
+  // Actualiza el total global
+  let totalDiv = document.getElementById('valor-total-global');
+  if (totalDiv) totalDiv.textContent = `$${totalGlobal.toFixed(2)}`;
+  // Listeners para acordeones de categorías
+  cont.querySelectorAll('.inventario-categoria-header').forEach((btn, idx) => {
+    btn.addEventListener('click', function() {
+      cont.querySelectorAll('.inventario-categoria').forEach((item, i) => {
+        if (i === idx) {
+          item.classList.toggle('active');
+          btn.setAttribute('aria-expanded', item.classList.contains('active'));
+          item.querySelector('.inventario-categoria-content').style.display = item.classList.contains('active') ? 'block' : 'none';
+        } else {
+          item.classList.remove('active');
+          item.querySelector('.inventario-categoria-header').setAttribute('aria-expanded', 'false');
+          item.querySelector('.inventario-categoria-content').style.display = 'none';
+        }
+      });
     });
   });
-  // Cierra el menú si se hace clic fuera
+  // Listeners para menú de acciones de cada producto
+  cont.querySelectorAll('.btn-menu').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      cont.querySelectorAll('.menu-dropdown').forEach(drop => drop.style.display = 'none');
+      const menu = this.nextElementSibling;
+      if (menu) {
+        // Posicionar el menú de forma fija respecto al botón
+        const rect = this.getBoundingClientRect();
+        menu.style.display = 'block';
+        menu.style.position = 'fixed';
+        menu.style.left = (rect.left + rect.width/2 - menu.offsetWidth/2) + 'px';
+        menu.style.top = (rect.bottom + 6) + 'px';
+        menu.style.zIndex = 99999;
+      }
+    });
+  });
+  // Oculta menús al hacer click fuera
   document.addEventListener('click', function() {
-    cuerpoTabla.querySelectorAll('.menu-dropdown').forEach(drop => drop.style.display = 'none');
+    cont.querySelectorAll('.menu-dropdown').forEach(drop => drop.style.display = 'none');
   });
 }
 
-// =================== Manejar botones Editar y Eliminar =================== //
-// Variable global para almacenar el producto actualmente en edición
 let productoEditando = null;
 
-// Delegamos el manejo de los botones Editar y Eliminar a la tabla de productos
-// para aprovechar el event bubbling y no tener que asignar listeners a cada botón individualmente
-
-document.querySelector("#tabla-productos").addEventListener("click", evento => {
-  // Si se hace clic en el botón Editar
+// Listener principal para acciones de editar y eliminar productos desde el inventario
+document.getElementById("inventario-acordeon-categorias").addEventListener("click", evento => {
+  // --- Edición de producto ---
   if (evento.target.matches(".btn-editar")) {
     const idProducto = String(evento.target.dataset.id);
-    // Buscamos el producto a editar por su ID (como string)
     const productoSeleccionado = productos.find(producto => String(producto.id) === idProducto);
     if (productoSeleccionado) {
-      // Cargamos los datos del producto en el formulario para editar
       const formulario = document.querySelector("#form-producto");
       formulario.nombre.value = productoSeleccionado.nombre;
       formulario.precio.value = productoSeleccionado.precio;
-      formulario.cantidad.value = productoSeleccionado.cantidad;
       formulario.categoria.value = productoSeleccionado.categoria;
+      formulario.tipoCantidad.value = productoSeleccionado.tipoCantidad || 'unidades';
+      if (productoSeleccionado.tipoCantidad === 'kilogramos') {
+        document.getElementById('tipoCantidad').value = 'kilogramos';
+        document.getElementById('label-cantidad-unidades').style.display = 'none';
+        document.getElementById('label-cantidad-kilos').style.display = '';
+        formulario.cantidadKilos.value = productoSeleccionado.cantidad;
+        formulario.cantidadUnidades.value = '';
+      } else {
+        document.getElementById('tipoCantidad').value = 'unidades';
+        document.getElementById('label-cantidad-unidades').style.display = '';
+        document.getElementById('label-cantidad-kilos').style.display = 'none';
+        formulario.cantidadUnidades.value = productoSeleccionado.cantidad;
+        formulario.cantidadKilos.value = '';
+      }
       productoEditando = productoSeleccionado;
       formulario.querySelector('button[type="submit"]').textContent = "Guardar cambios";
-      // Mostramos el botón cancelar
       btnCancelar.style.display = 'inline-block';
     }
-    // Cerramos el menú desplegable si está abierto
+    // Oculta el menú de acciones tras editar
     if (evento.target.closest('.menu-dropdown')) evento.target.closest('.menu-dropdown').style.display = 'none';
     return;
   }
-  // Si se hace clic en el botón Eliminar
+  // --- Eliminación de producto ---
   if (evento.target.matches(".btn-eliminar")) {
     const idProducto = String(evento.target.dataset.id);
     const productoAEliminar = productos.find(producto => String(producto.id) === idProducto);
-    // Confirmación antes de eliminar
     if (productoAEliminar) {
       const confirmar = confirm(`¿Estás seguro que deseas eliminar el producto "${productoAEliminar.nombre}"?`);
       if (!confirmar) return;
     }
     eliminarProducto(idProducto);
-    // Cerramos el menú desplegable si está abierto
     if (evento.target.closest('.menu-dropdown')) evento.target.closest('.menu-dropdown').style.display = 'none';
   }
 });
 
-// =================== Eliminar producto =================== //
-/**
- * Elimina un producto por su ID y actualiza la vista.
- * @param {string} idProducto - El ID del producto a eliminar
- */
+// Elimina un producto del backend y actualiza la UI
 function eliminarProducto(idProducto) {
   fetch(`http://localhost:3000/productos/${idProducto}`, { method: 'DELETE' })
     .then(respuesta => {
       if (!respuesta.ok) throw new Error("No se pudo eliminar en el servidor");
-      // Tras eliminar, volvemos a pedir la lista actualizada de productos
       return fetch('http://localhost:3000/productos');
     })
     .then(respuesta => respuesta.json())
     .then(productosActualizados => {
-      // Convertimos todos los IDs de los productos a string para evitar problemas de tipo
       productos = productosActualizados.map(productoDelServidor => ({
         ...productoDelServidor,
         id: String(productoDelServidor.id)
       }));
       reconstruirSetsYMaps();
-      renderTabla();
-      renderCategorias();
-      renderTotales();
+      renderUltimosIngresados();
+      renderInventario();
     })
     .catch(error => {
       alert("Error al eliminar producto: " + error.message);
@@ -168,104 +218,121 @@ function eliminarProducto(idProducto) {
     });
 }
 
-// =================== Renderizar productos por categoría =================== //
-function renderCategorias() {
-  const cont = document.querySelector("#lista-categorias");
-  cont.innerHTML = "";
-  mapCategorias.forEach((arr, categoria) => {
-    // Creamos la lista de productos de la categoría
-    const lista = arr
-      .map(productoCat => `<li>${productoCat.nombre} — $${productoCat.precio.toFixed(2)} — x${productoCat.cantidad} — Ingresado: ${productoCat.fechaIngreso ? productoCat.fechaIngreso : '-'}</li>`)
-      .join("");
-    cont.insertAdjacentHTML("beforeend",
-      `<article class="categoria">
-         <h3>${categoria}</h3>
-         <ul>${lista}</ul>
-       </article>`);
-  });
-}
-
-// =================== Generar ID único =================== //
-// Genera un nuevo ID único como string para cada producto nuevo
+// =================== Helpers y validación ===================
+// Genera un ID único para nuevos productos
 function generarId() {
-  // Usamos timestamp + random para asegurar unicidad incluso en inserciones rápidas
   return String(Date.now()) + String(Math.floor(Math.random() * 100000));
 }
 
-// =================== Buscar producto por ID =================== //
+// Busca un producto por su ID
 function buscarProductoPorId(idBuscado) {
-  // Busca un producto en la lista principal por su ID (como string)
   return productos.find(producto => String(producto.id) === String(idBuscado));
 }
 
-// =================== Agregar producto =================== //
-// Manejamos el envío del formulario para agregar o editar productos
-// Si productoEditando es null, se agrega un nuevo producto; si no, se actualiza el existente
-
+// =================== Lógica del formulario de productos ===================
 const formProducto = document.querySelector("#form-producto");
-// Creamos el botón cancelar solo una vez
 let btnCancelar = formProducto.querySelector('.btn-cancelar');
 if (!btnCancelar) {
   btnCancelar = document.createElement('button');
   btnCancelar.type = 'button';
   btnCancelar.textContent = 'Cancelar';
   btnCancelar.className = 'btn-cancelar';
-  btnCancelar.style.marginLeft = '1em';
   btnCancelar.style.display = 'none';
-  formProducto.appendChild(btnCancelar);
-
+  // Insertar debajo del contenedor de botones
+  const contenedorBotones = formProducto.querySelector('.form-botones');
+  if (contenedorBotones) {
+    contenedorBotones.appendChild(btnCancelar);
+  } else {
+    formProducto.appendChild(btnCancelar);
+  }
+  // Listener para cancelar edición
   btnCancelar.addEventListener('click', () => {
-    // Al cancelar, reseteamos el formulario y volvemos a modo agregar
     formProducto.reset();
     formProducto.nombre.focus();
-    productoEditando = null;
+    window.productoEditando = null;
     formProducto.querySelector('button[type="submit"]').textContent = "Agregar";
     btnCancelar.style.display = 'none';
+    localStorage.removeItem('mensajeFormulario');
+    const mensajeDiv = document.getElementById('mensaje-formulario');
+    if (mensajeDiv) {
+      mensajeDiv.textContent = '';
+      mensajeDiv.className = '';
+      if (mensajeDiv._timeout) clearTimeout(mensajeDiv._timeout);
+    }
   });
 }
 
-// Si productoEditando es null, se agrega un nuevo producto; si no, se actualiza el existente
-document.querySelector("#form-producto").addEventListener("submit", evento => {
+// Cambia el campo de cantidad según el tipo seleccionado (unidades/kilogramos)
+document.getElementById('tipoCantidad').addEventListener('change', function() {
+  if (this.value === 'kilogramos') {
+    document.getElementById('label-cantidad-unidades').style.display = 'none';
+    document.getElementById('label-cantidad-kilos').style.display = '';
+  } else {
+    document.getElementById('label-cantidad-unidades').style.display = '';
+    document.getElementById('label-cantidad-kilos').style.display = 'none';
+  }
+});
+
+// Maneja el envío del formulario para agregar o editar productos
+formProducto.addEventListener("submit", evento => {
   evento.preventDefault();
   const datosFormulario = new FormData(evento.target);
+  const tipoCantidad = datosFormulario.get("tipoCantidad");
+  let cantidad = 0;
+  if (tipoCantidad === 'kilogramos') {
+    cantidad = parseFloat(datosFormulario.get("cantidadKilos"));
+  } else {
+    cantidad = parseInt(datosFormulario.get("cantidadUnidades"));
+  }
+  const mensajeDiv = document.getElementById('mensaje-formulario');
 
-  // Si estamos editando un producto existente
+  // --- Edición de producto existente ---
   if (productoEditando) {
     const productoActualizado = {
       ...productoEditando,
       nombre: datosFormulario.get("nombre").trim(),
       precio: Number(datosFormulario.get("precio")),
-      cantidad: Number(datosFormulario.get("cantidad")),
-      categoria: datosFormulario.get("categoria")
-      // fechaIngreso no se modifica al editar
+      cantidad: cantidad,
+      tipoCantidad: tipoCantidad,
+      categoria: datosFormulario.get("categoria"),
+      fechaEdicion: new Date().toLocaleString()
     };
     try {
       validarProducto(productoActualizado);
-      actualizarProducto(productoActualizado);
+      actualizarProducto(productoActualizado, true, mensajeDiv);
       productoEditando = null;
       evento.target.reset();
       evento.target.nombre.focus();
       evento.target.querySelector('button[type="submit"]').textContent = "Agregar";
       btnCancelar.style.display = 'none';
+      localStorage.removeItem('mensajeFormulario');
+      // No limpiar mensajeDiv aquí, dejar que el mensaje persista según lógica de mostrarMensajePersistente
+      if (mensajeDiv._timeout) clearTimeout(mensajeDiv._timeout);
     } catch (error) {
-      alert(error.message);
+      const mensajePersistente = {
+        texto: error.message,
+        clase: 'error',
+        timestamp: Date.now()
+      };
+      localStorage.setItem('mensajeFormulario', JSON.stringify(mensajePersistente));
+      mostrarMensajePersistente();
     }
     return;
   }
 
-  // Si es un producto nuevo
+  // --- Alta de nuevo producto ---
   const nuevoProducto = {
     id:        generarId(),
     nombre:    datosFormulario.get("nombre").trim(),
     precio:    Number(datosFormulario.get("precio")),
-    cantidad:  Number(datosFormulario.get("cantidad")),
+    cantidad:  cantidad,
+    tipoCantidad: tipoCantidad,
     categoria: datosFormulario.get("categoria"),
-    fechaIngreso: new Date().toLocaleString() // Fecha y hora local de ingreso
+    fechaIngreso: new Date().toLocaleString()
   };
 
   try {
     validarProducto(nuevoProducto);
-    // Verificamos que no exista un producto con el mismo nombre (ignorando mayúsculas/minúsculas)
     if (productos.some(productoExistente => productoExistente.nombre.toLowerCase() === nuevoProducto.nombre.toLowerCase())) {
       throw new Error("Ya existe un producto con ese nombre");
     }
@@ -278,20 +345,69 @@ document.querySelector("#form-producto").addEventListener("submit", evento => {
       .then(productoAgregado => {
         productos.push(productoAgregado);
         reconstruirSetsYMaps();
-        renderTabla();
-        renderCategorias();
-        renderTotales();
+        renderUltimosIngresados();
+        renderInventario();
+        const mensajePersistente = {
+          texto: 'Producto agregado correctamente',
+          clase: 'success',
+          timestamp: Date.now()
+        };
+        localStorage.setItem('mensajeFormulario', JSON.stringify(mensajePersistente));
+        mostrarMensajePersistente();
       })
-      .catch(error => console.error("Error al agregar producto:", error));
-    evento.target.reset();
-    evento.target.nombre.focus();
+      .catch(error => {
+        const mensajePersistente = {
+          texto: 'Error al agregar producto: ' + error.message,
+          clase: 'error',
+          timestamp: Date.now()
+        };
+        localStorage.setItem('mensajeFormulario', JSON.stringify(mensajePersistente));
+        mostrarMensajePersistente();
+      });
   } catch (error) {
-    alert(error.message);
+    const mensajePersistente = {
+      texto: error.message,
+      clase: 'error',
+      timestamp: Date.now()
+    };
+    localStorage.setItem('mensajeFormulario', JSON.stringify(mensajePersistente));
+    mostrarMensajePersistente();
   }
 });
 
-// =================== Actualizar producto existente =================== //
-function actualizarProducto(productoActualizado) {
+// Muestra mensajes persistentes del formulario (éxito/error) y los limpia tras 10s
+function mostrarMensajePersistente() {
+  const mensajeDiv = document.getElementById('mensaje-formulario');
+  const data = localStorage.getItem('mensajeFormulario');
+  if (!data) return;
+  const { texto, clase, timestamp } = JSON.parse(data);
+  mensajeDiv.textContent = texto;
+  mensajeDiv.className = clase;
+  if (mensajeDiv._timeout) clearTimeout(mensajeDiv._timeout);
+  const msPasados = Date.now() - timestamp;
+  const msRestantes = Math.max(0, 10000 - msPasados);
+  if (msRestantes > 0) {
+    mensajeDiv._timeout = setTimeout(() => {
+      // Solo limpiar si el usuario no está editando (productoEditando == null)
+      if (!window.productoEditando) {
+        mensajeDiv.textContent = '';
+        mensajeDiv.className = '';
+        localStorage.removeItem('mensajeFormulario');
+      }
+    }, msRestantes);
+  } else {
+    if (!window.productoEditando) {
+      mensajeDiv.textContent = '';
+      mensajeDiv.className = '';
+      localStorage.removeItem('mensajeFormulario');
+    }
+  }
+}
+// Inicializa la visualización de mensajes persistentes al cargar la página
+window.addEventListener('DOMContentLoaded', mostrarMensajePersistente);
+
+// Actualiza un producto existente en el backend y la UI
+function actualizarProducto(productoActualizado, mostrarMensaje, mensajeDiv) {
   const idStr = String(productoActualizado.id);
   fetch(`http://localhost:3000/productos/${idStr}`, {
     method: 'PUT',
@@ -300,59 +416,144 @@ function actualizarProducto(productoActualizado) {
   })
     .then(response => response.json())
     .then(data => {
-      // Buscamos el índice del producto actualizado en la lista principal
       const index = productos.findIndex(productoBuscado => String(productoBuscado.id) === idStr);
       if (index !== -1) productos[index] = data;
       reconstruirSetsYMaps();
-      renderTabla();
-      renderCategorias();
-      renderTotales();
+      renderUltimosIngresados();
+      renderInventario();
+      if (mostrarMensaje && mensajeDiv) {
+        mensajeDiv.textContent = 'Producto actualizado correctamente';
+        mensajeDiv.className = 'success';
+        if (mensajeDiv._timeout) clearTimeout(mensajeDiv._timeout);
+        mensajeDiv._timeout = setTimeout(() => {
+          mensajeDiv.textContent = '';
+          mensajeDiv.className = '';
+          localStorage.removeItem('mensajeFormulario');
+        }, 10000);
+      }
     })
-    .catch(error => console.error("Error al actualizar producto:", error));
+    .catch(error => {
+      if (mostrarMensaje && mensajeDiv) {
+        mensajeDiv.textContent = 'Error al actualizar producto: ' + error.message;
+        mensajeDiv.className = 'error';
+        if (mensajeDiv._timeout) clearTimeout(mensajeDiv._timeout);
+        mensajeDiv._timeout = setTimeout(() => {
+          mensajeDiv.textContent = '';
+          mensajeDiv.className = '';
+          localStorage.removeItem('mensajeFormulario');
+        }, 10000);
+      }
+    });
 }
 
-// =================== Validar producto antes de guardar =================== //
+// Valida los datos de un producto antes de enviarlo al backend
 function validarProducto(producto) {
-  // Expresión regular para validar nombres permitiendo letras, números, espacios y caracteres comunes en nombres comerciales
-  // Permite: letras, números, espacios, guiones, paréntesis, puntos, comas, barras, dos puntos, signos de suma, etc.
   const regexNombre = /^[A-Za-zÁÉÍÓÚáéíóúÑñ0-9 .,:;\-()\[\]/+]+$/;
-  // Validación de nombre: no vacío y solo caracteres permitidos
   if (!producto.nombre || !regexNombre.test(producto.nombre)) {
     throw new Error("Nombre vacío o con caracteres no permitidos");
   }
-  // Validación de precio: debe ser un número mayor a 0
   if (typeof producto.precio !== 'number' || producto.precio <= 0) {
     throw new Error("Precio inválido");
   }
-  // Validación de cantidad: debe ser un entero mayor a 0
-  if (!Number.isInteger(producto.cantidad) || producto.cantidad <= 0) {
-    throw new Error("Cantidad inválida");
+  if (producto.tipoCantidad === 'kilogramos') {
+    if (typeof producto.cantidad !== 'number' || producto.cantidad <= 0) {
+      throw new Error("Cantidad en kilogramos inválida");
+    }
+  } else {
+    if (!Number.isInteger(producto.cantidad) || producto.cantidad <= 0) {
+      throw new Error("Cantidad en unidades inválida");
+    }
   }
 }
 
-// =================== Renderizar tabla de totales =================== //
-/**
- * Renderiza la tabla que muestra el valor total de cada producto (precio x cantidad).
- */
-function renderTotales() {
-  // Seleccionamos el cuerpo de la tabla de totales
-  const cuerpoTablaTotales = document.querySelector("#tabla-preciosTotales tbody");
-  // Limpiamos el contenido anterior de la tabla
-  cuerpoTablaTotales.innerHTML = "";
-  // Ordenamos los productos por ID y mostramos el total por producto
-  productos
-    .sort((productoA, productoB) => Number(productoA.id) - Number(productoB.id))
-    .forEach(({ nombre, precio, cantidad }) => {
-      // Calculamos el valor total del producto
-      const valorTotal = precio * cantidad;
-      // Creamos la fila HTML para la tabla de totales
-      const filaHTML = `
-        <tr>
-          <td>${nombre}</td>
-          <td>$${precio.toFixed(2)}</td>
-          <td>$${valorTotal.toFixed(2)}</td>
-        </tr>`;
-      // Insertamos la fila en la tabla de totales
-      cuerpoTablaTotales.insertAdjacentHTML("beforeend", filaHTML);
+// Inicializa el acordeón principal de la UI (no categorías)
+function inicializarAccordion() {
+  document.querySelectorAll('.accordion-header').forEach((btn, idx) => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.accordion-item').forEach((item, i) => {
+        if (i === idx) {
+          item.classList.toggle('active');
+          btn.setAttribute('aria-expanded', item.classList.contains('active'));
+        } else {
+          item.classList.remove('active');
+          item.querySelector('.accordion-header').setAttribute('aria-expanded', 'false');
+        }
+      });
     });
+  });
+  const first = document.querySelector('.accordion-item');
+  if (first) {
+    first.classList.add('active');
+    first.querySelector('.accordion-header').setAttribute('aria-expanded', 'true');
+  }
 }
+
+// =================== Popover de fecha de edición y menú de acciones (UI flotante) ===================
+// Listeners globales para mostrar/ocultar popover de fecha de edición y menú de acciones flotante
+document.addEventListener('DOMContentLoaded', () => {
+  // Popover de fecha de edición
+  document.body.addEventListener('mouseenter', function(e) {
+    if (e.target.classList.contains('fecha-ingreso-btn')) {
+      const pop = e.target.nextElementSibling;
+      if (pop && pop.classList.contains('fecha-edicion-pop')) {
+        const rect = e.target.getBoundingClientRect();
+        pop.style.position = 'fixed';
+        pop.style.left = (rect.left + rect.width/2) + 'px';
+        pop.style.top = (rect.bottom + 6) + 'px';
+        pop.style.transform = 'translateX(-50%)';
+        pop.style.display = 'block';
+        pop.style.zIndex = 100010;
+      }
+    }
+  }, true);
+  document.body.addEventListener('mouseleave', function(e) {
+    if (e.target.classList.contains('fecha-ingreso-btn')) {
+      const pop = e.target.nextElementSibling;
+      if (pop && pop.classList.contains('fecha-edicion-pop')) {
+        pop.style.display = 'none';
+      }
+    }
+  }, true);
+  document.body.addEventListener('focusin', function(e) {
+    if (e.target.classList.contains('fecha-ingreso-btn')) {
+      const pop = e.target.nextElementSibling;
+      if (pop && pop.classList.contains('fecha-edicion-pop')) {
+        const rect = e.target.getBoundingClientRect();
+        pop.style.position = 'fixed';
+        pop.style.left = (rect.left + rect.width/2) + 'px';
+        pop.style.top = (rect.bottom + 6) + 'px';
+        pop.style.transform = 'translateX(-50%)';
+        pop.style.display = 'block';
+        pop.style.zIndex = 100010;
+      }
+    }
+  });
+  document.body.addEventListener('focusout', function(e) {
+    if (e.target.classList.contains('fecha-ingreso-btn')) {
+      const pop = e.target.nextElementSibling;
+      if (pop && pop.classList.contains('fecha-edicion-pop')) {
+        pop.style.display = 'none';
+      }
+    }
+  });
+
+  // Menú de acciones flotante
+  document.body.addEventListener('click', function(e) {
+    if (e.target.classList.contains('btn-menu')) {
+      document.querySelectorAll('.menu-dropdown').forEach(drop => drop.style.display = 'none');
+      const menu = e.target.nextElementSibling;
+      if (menu) {
+        const rect = e.target.getBoundingClientRect();
+        menu.style.display = 'block';
+        menu.style.position = 'fixed';
+        menu.style.left = (rect.left + rect.width/2 - menu.offsetWidth/2) + 'px';
+        menu.style.top = (rect.bottom + 6) + 'px';
+        menu.style.zIndex = 100010;
+      }
+    } else if (!e.target.closest('.menu-dropdown')) {
+      document.querySelectorAll('.menu-dropdown').forEach(drop => {
+        drop.style.display = 'none';
+      });
+    }
+  });
+});
