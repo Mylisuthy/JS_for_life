@@ -12,6 +12,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   displayData();           // muestra lo almacenado
   initInteractionCount();  // prepara contador
+  updateInteractionCounter(); // muestra contador en DOM
   document.getElementById('saveButton')
           .addEventListener('click', onSave);
   document.getElementById('clearButton')
@@ -51,6 +52,8 @@ function onSave() {
 
   incrementInteraction();
   displayData();
+  updateInteractionCounter();
+  showPersistenceInConsole();
 }
 
 /**
@@ -62,6 +65,8 @@ function onClear() {
   console.log('LocalStorage: clave "user" eliminada');
   incrementInteraction();
   displayData();
+  updateInteractionCounter();
+  showPersistenceInConsole();
 }
 
 /**
@@ -87,7 +92,8 @@ function displayData() {
     output.appendChild(p);
   }
 
-  console.log('Display actualizado. LS =', localStorage.getItem('user'));
+  // Mostrar persistencia en consola
+  showPersistenceInConsole();
 }
 
 /**
@@ -98,6 +104,7 @@ function initInteractionCount() {
   if (!sessionStorage.getItem('interactionCount')) {
     sessionStorage.setItem('interactionCount', '0');
   }
+  updateInteractionCounter();
   console.log('SessionStorage inicial:', sessionStorage.getItem('interactionCount'));
 }
 
@@ -108,5 +115,24 @@ function incrementInteraction() {
   let count = parseInt(sessionStorage.getItem('interactionCount'), 10) || 0;
   count++;
   sessionStorage.setItem('interactionCount', String(count));
+  updateInteractionCounter();
   console.log(`Interacciones en esta sesión: ${count}`);
+}
+
+/**
+ * Actualiza el contador de interacciones en el DOM
+ */
+function updateInteractionCounter() {
+  const counterDiv = document.getElementById('interactionCounter');
+  const count = sessionStorage.getItem('interactionCount') || '0';
+  counterDiv.textContent = `Interacciones en esta sesión: ${count}`;
+}
+
+/**
+ * Muestra la persistencia de datos en consola
+ */
+function showPersistenceInConsole() {
+  const user = localStorage.getItem('user');
+  const count = sessionStorage.getItem('interactionCount');
+  console.log('Persistencia actual →', { user, interactionCount: count });
 }
