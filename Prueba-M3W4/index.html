@@ -4,17 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Escuelita Riwi</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
   <div class="login-container">
-    <h2>Login Riwi</h2>
+    <h2>Estudiantes de Riwi</h2>
     <form id="userForm">
-      <label for="name">Nombre:</label>
-      <input type="text" id="name" name="name" required autocomplete="off">
+      <div class="input-group">
+        <label for="name">Nombre:</label>
+        <input type="text" id="name" name="name" required autocomplete="off">
+        <p class="error-message" id="error-name"></p>
+      </div>
 
-      <label for="age">Edad:</label>
-      <input type="number" id="age" name="age" required min="1" max="120" autocomplete="off">
+      <div class="input-group">
+        <label for="clan">Clan:</label>
+        <input type="text" id="clan" name="clan" required autocomplete="off">
+        <p class="error-message" id="error-clan"></p>
+      </div>
+
+      <div class="input-group">
+        <label for="age">Edad:</label>
+        <input type="number" id="age" name="age" required min="1" max="120" autocomplete="off">
+        <p class="error-message" id="error-age"></p>
+      </div>
 
       <div class="button-group">
         <button type="button" id="saveButton">Guardar Datos</button>
@@ -23,7 +35,8 @@
     </form>
     <div id="output"></div>
     <div id="interactionCounter"></div>
+    <div id="errors" class="error-container"></div>
   </div>
-  <script src="script.js"></script>
+  <script src="./script.js"></script>
 </body>
 </html>
