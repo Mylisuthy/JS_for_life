@@ -1,0 +1,33 @@
+<!-- Modal para agregar/editar libro -->
+<div id="modal-libro" class="modal-libro" style="display:none;">
+  <div class="modal-content auth-form">
+    <h2 id="modal-libro-title">Agregar libro</h2>
+    <form id="form-libro">
+      <div class="form-group">
+        <label for="libro-nombre">Título</label>
+        <input class="input" id="libro-nombre" name="nombre" type="text" required minlength="2" />
+      </div>
+      <div class="form-group">
+        <label for="libro-autor">Autor</label>
+        <input class="input" id="libro-autor" name="autor" type="text" required minlength="2" />
+      </div>
+      <div class="form-group">
+        <label for="libro-descripcion">Descripción</label>
+        <textarea class="input" id="libro-descripcion" name="descripcion" rows="3" required minlength="5"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="libro-precio">Precio</label>
+        <input class="input" id="libro-precio" name="precio" type="number" min="1" required />
+      </div>
+      <div class="form-group">
+        <label for="libro-imagen">URL de portada</label>
+        <input class="input" id="libro-imagen" name="imagen" type="url" required />
+      </div>
+      <div class="form-error" id="libro-error" aria-live="polite"></div>
+      <div style="display:flex; gap:1rem; justify-content:center; margin-top:1rem;">
+        <button class="btn" type="submit" id="libro-submit">Guardar</button>
+        <button class="btn" type="button" id="libro-cancel" style="background:#d32f2f;">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>

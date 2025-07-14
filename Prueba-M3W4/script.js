@@ -1,6 +1,5 @@
 // ——————————————————————————————
-// Escuelita Riwi: manipulación de DOM y persistencia
-// Requisitos Moodle: getItem/setItem/removeItem, LSS, SS, DOM dinámico.
+// manipulación de DOM y persistencia
 // ——————————————————————————————
 
 /**
@@ -202,4 +201,3 @@ function displayData() {
   // Mostrar persistencia en consola
   showPersistenceInConsole();
 }
-

@@ -1,0 +1,108 @@
+{
+  "usuarios": [
+    {
+      "nombre": "Pedro",
+      "apellido": "Suthy",
+      "email": "correo@mail.com",
+      "password": "123456",
+      "es_Bibliotecario": false
+    },
+    {
+      "nombre": "camilo",
+      "apellido": "Suthy",
+      "email": "camilo@mail.com",
+      "password": "123456",
+      "es_Bibliotecario": true
+    },
+    {
+      "id": "c1ef",
+      "nombre": "pedro",
+      "apellido": "",
+      "email": "pedro@gmail.com",
+      "password": "1234567",
+      "es_Bibliotecario": false
+    }
+  ],
+  "libros": [
+    {
+      "id": 1,
+      "nombre": "Cien años de soledad",
+      "autor": "Gabriel García Márquez",
+      "descripcion": "La obra maestra del realismo mágico que narra la historia de la familia Buendía a lo largo de siete generaciones en el mítico pueblo de Macondo.",
+      "precio": 399,
+      "imagen": "https://covers.openlibrary.org/b/id/11153246-L.jpg"
+    },
+    {
+      "id": 2,
+      "nombre": "Don Quijote de la Mancha",
+      "autor": "Miguel de Cervantes",
+      "descripcion": "Considerada la mejor novela de todos los tiempos, relata las aventuras del ingenioso hidalgo Don Quijote y su fiel escudero Sancho Panza.",
+      "precio": 299,
+      "imagen": "https://covers.openlibrary.org/b/id/8231856-L.jpg"
+    },
+    {
+      "id": 3,
+      "nombre": "Rayuela",
+      "autor": "Julio Cortázar",
+      "descripcion": "Novela revolucionaria de la literatura latinoamericana, famosa por su estructura abierta y su exploración del amor y el existencialismo.",
+      "precio": 350,
+      "imagen": "https://covers.openlibrary.org/b/id/10523347-L.jpg"
+    },
+    {
+      "id": 4,
+      "nombre": "El amor en los tiempos del cólera",
+      "autor": "Gabriel García Márquez",
+      "descripcion": "Una historia de amor épica que abarca más de medio siglo en el Caribe colombiano.",
+      "precio": 320,
+      "imagen": "https://covers.openlibrary.org/b/id/11153252-L.jpg"
+    },
+    {
+      "id": 5,
+      "nombre": "Pedro Páramo",
+      "autor": "Juan Rulfo",
+      "descripcion": "Un clásico de la literatura mexicana, donde Juan Preciado viaja a Comala en busca de su padre.",
+      "precio": 280,
+      "imagen": "https://covers.openlibrary.org/b/id/8228691-L.jpg"
+    },
+    {
+      "id": 6,
+      "nombre": "La sombra del viento",
+      "autor": "Carlos Ruiz Zafón",
+      "descripcion": "Un thriller literario ambientado en la Barcelona de la posguerra, lleno de misterio y pasión por los libros.",
+      "precio": 410,
+      "imagen": "https://covers.openlibrary.org/b/id/8379259-L.jpg"
+    },
+    {
+      "id": 7,
+      "nombre": "Ficciones",
+      "autor": "Jorge Luis Borges",
+      "descripcion": "Colección de relatos cortos que exploran el infinito, los laberintos y los espejos.",
+      "precio": 260,
+      "imagen": "https://covers.openlibrary.org/b/id/10909210-L.jpg"
+    },
+    {
+      "id": 8,
+      "nombre": "La tregua",
+      "autor": "Mario Benedetti",
+      "descripcion": "Una novela breve sobre la soledad, el amor y la rutina en Montevideo.",
+      "precio": 210,
+      "imagen": "https://covers.openlibrary.org/b/id/10531479-L.jpg"
+    },
+    {
+      "id": 9,
+      "nombre": "Los detectives salvajes",
+      "autor": "Roberto Bolaño",
+      "descripcion": "Una obra maestra de la literatura contemporánea, que sigue la búsqueda de dos poetas en el México de los años setenta.",
+      "precio": 390,
+      "imagen": "https://covers.openlibrary.org/b/id/11153270-L.jpg"
+    },
+    {
+      "id": 10,
+      "nombre": "Padre rico, padre pobre",
+      "autor": "Robert Kiyosaki",
+      "descripcion": "Un libro clásico sobre educación financiera y mentalidad de riqueza, ideal para quienes buscan mejorar sus finanzas personales.",
+      "precio": 199,
+      "imagen": "https://covers.openlibrary.org/b/id/12623287-L.jpg"
+    }
+  ]
+}

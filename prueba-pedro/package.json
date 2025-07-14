@@ -1,0 +1,17 @@
+{
+  "name": "prueba-pedro",
+  "version": "1.0.0",
+  "description": "n",
+  "main": "main.js",
+  "scripts": {
+    "server": "json-server --watch db.json --port 3000",
+    "dev": "vite",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "json-server": "^1.0.0-beta.3",
+    "vite": "^7.0.4"
+  }
+}
